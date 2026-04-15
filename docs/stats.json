@@ -1,0 +1,14 @@
+{
+  "generated_at": "2026-04-15T22:04:07Z",
+  "total_decisions": 3200,
+  "total_laws": 0,
+  "decisions_by_court": {
+    "Justiz": 3200
+  },
+  "corpus_span": {
+    "earliest": "2025-09-29",
+    "latest": "2026-03-25"
+  },
+  "last_aenderungsdatum": "2026-04-15",
+  "schema_version": 1
+}
