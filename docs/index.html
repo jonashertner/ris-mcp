@@ -99,12 +99,12 @@
 </section>
 
 <section class="max-w-5xl mx-auto px-6 py-16 border-t border-slate-200">
-  <h2 class="text-3xl font-bold">Why not <code>philrox/ris-mcp-ts</code>?</h2>
-  <p class="mt-4 text-slate-600 max-w-3xl">A legitimate TypeScript MCP wrapper for RIS already exists. It's a great fit for casual queries. <code>ris-mcp</code> is a different trade-off: build and maintain a local mirror so you get better answers.</p>
+  <h2 class="text-3xl font-bold">Why a local mirror?</h2>
+  <p class="mt-4 text-slate-600 max-w-3xl">Querying RIS live on every request means inheriting its field-based keyword search and 2–5 s per-query latency. A local mirror buys better search quality, sub-ms latency, offline capability, and a foundation for a resolved citation graph.</p>
   <div class="mt-8 overflow-x-auto">
     <table class="w-full text-sm border border-slate-200 rounded-lg overflow-hidden">
       <thead class="bg-slate-100 text-left">
-        <tr><th class="p-3">Capability</th><th class="p-3">philrox (live proxy)</th><th class="p-3">ris-mcp (local mirror)</th></tr>
+        <tr><th class="p-3">Capability</th><th class="p-3">Live API query</th><th class="p-3">ris-mcp (local mirror)</th></tr>
       </thead>
       <tbody class="divide-y divide-slate-200">
         <tr><td class="p-3">Claude can query Austrian law</td><td class="p-3">✅</td><td class="p-3">✅</td></tr>
@@ -157,11 +157,9 @@
   <div class="max-w-5xl mx-auto px-6 py-10 text-sm text-slate-600">
     <p>
       Code: MIT. Data: CC0-1.0 — Austrian RIS content is amtliches Werk per § 7 öUrhG.
-      Not legal advice. Builds on the documentation work of
-      <a class="underline" href="https://github.com/ximex/ris-bka">ximex/ris-bka</a>,
-      learns from
-      <a class="underline" href="https://github.com/philrox/ris-mcp-ts">philrox/ris-mcp-ts</a>,
-      <a class="underline" href="https://github.com/PhilippTh/ris-API-wrapper">PhilippTh/ris-API-wrapper</a>, and
+      Not legal advice. Builds on the RIS OGD documentation at
+      <a class="underline" href="https://github.com/ximex/ris-bka">ximex/ris-bka</a>
+      and takes architectural cues from
       <a class="underline" href="https://opencaselaw.ch">opencaselaw.ch</a>.
     </p>
   </div>
