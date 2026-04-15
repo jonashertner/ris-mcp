@@ -16,14 +16,21 @@ def build_server() -> Server:
     server = Server("ris-mcp")
     conn = open_db()
 
-    # Tool registration is added in Tasks 8–10.
-    from .tools import get_decision as t_gd
-    from .tools import get_law as t_gl
     from .tools import search_decisions as t_sd
+    # Tasks 9 and 10 add: get_decision, get_law
+    tools = {t_sd.TOOL.name: t_sd}
 
-    t_sd.register(server, conn)
-    t_gd.register(server, conn)
-    t_gl.register(server, conn)
+    @server.list_tools()
+    async def _list():
+        return [t.TOOL for t in tools.values()]
+
+    @server.call_tool()
+    async def _call(name: str, arguments: dict):
+        t = tools.get(name)
+        if t is None:
+            raise ValueError(f"unknown tool: {name}")
+        return await t.handle(conn, arguments)
+
     return server
 
 
