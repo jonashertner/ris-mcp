@@ -12,6 +12,7 @@ from dataclasses import dataclass, field
 from typing import Any
 
 import httpx
+from bs4 import BeautifulSoup
 from pydantic import BaseModel, Field
 
 from . import __version__
@@ -105,6 +106,135 @@ class RisClient:
 
     async def fetch_document(self, url: str) -> str:
         return (await self._get(url)).text
+
+    async def fetch_law_index(
+        self,
+        *,
+        page_size: int = 100,
+        max_pages: int | None = None,
+    ) -> list[dict]:
+        """Scan consolidated Bundesrecht (BrKons) and return one entry per
+        distinct Gesetzesnummer with ``{gesetzesnummer, kurztitel, langtitel}``.
+
+        The BrKons OGD endpoint returns one document per § / Artikel, so laws
+        must be deduped on the client side. ``max_pages`` caps the scan for
+        tests or partial refreshes; ``None`` scans until an empty page.
+        """
+        try:
+            page_size_enum = PAGE_SIZE_ENUM[page_size]
+        except KeyError:
+            raise ValueError(
+                f"page_size must be one of {sorted(PAGE_SIZE_ENUM)}; got {page_size!r}"
+            ) from None
+
+        seen: dict[str, dict] = {}
+        page = 1
+        while True:
+            if max_pages is not None and page > max_pages:
+                break
+            params = {
+                "Applikation": "BrKons",
+                "DokumenteProSeite": page_size_enum,
+                "Seitennummer": page,
+            }
+            data = await self._get_json(f"{self.base_url}/Bundesrecht", params=params)
+            refs = _refs(data)
+            if not refs:
+                break
+            for r in refs:
+                br = _br_meta(r)
+                if not br:
+                    continue
+                sub = br.get("BrKons") or {}
+                gesnr = sub.get("Gesetzesnummer")
+                if not gesnr:
+                    continue
+                if gesnr in seen:
+                    continue
+                seen[gesnr] = {
+                    "gesetzesnummer": str(gesnr),
+                    "kurztitel": (br.get("Kurztitel") or "").strip() or None,
+                    "langtitel": _strip_html(br.get("Titel")),
+                }
+            page += 1
+        return list(seen.values())
+
+    async def fetch_law_articles(
+        self,
+        gesetzesnummer: str,
+        *,
+        page_size: int = 100,
+        max_pages: int | None = None,
+        fetch_text: bool = True,
+    ) -> list[dict]:
+        """Return one dict per paragraph / Artikel / Anlage of the given law.
+
+        BrKons returns each paragraph as its own document. Text is not inline
+        in the metadata; when ``fetch_text`` is True we follow the HTML
+        ``ContentUrl`` and strip to plain text.
+        """
+        try:
+            page_size_enum = PAGE_SIZE_ENUM[page_size]
+        except KeyError:
+            raise ValueError(
+                f"page_size must be one of {sorted(PAGE_SIZE_ENUM)}; got {page_size!r}"
+            ) from None
+
+        out: list[dict] = []
+        page = 1
+        while True:
+            if max_pages is not None and page > max_pages:
+                break
+            params = {
+                "Applikation": "BrKons",
+                "Gesetzesnummer": gesetzesnummer,
+                "DokumenteProSeite": page_size_enum,
+                "Seitennummer": page,
+            }
+            data = await self._get_json(f"{self.base_url}/Bundesrecht", params=params)
+            refs = _refs(data)
+            if not refs:
+                break
+            for r in refs:
+                br = _br_meta(r)
+                if not br:
+                    continue
+                sub = br.get("BrKons") or {}
+                paragraf = (
+                    sub.get("Paragraphnummer")
+                    or sub.get("Artikelnummer")
+                    or sub.get("ArtikelParagraphAnlage")
+                    or ""
+                )
+                paragraf = str(paragraf).strip()
+                if not paragraf:
+                    continue
+                content_url = _extract_content_url(r.get("Data") or {})
+                dok_url = (
+                    ((r.get("Data") or {}).get("Metadaten") or {})
+                    .get("Allgemein", {})
+                    .get("DokumentUrl")
+                )
+                text = ""
+                if fetch_text and content_url:
+                    try:
+                        html = await self.fetch_document(content_url)
+                        text = _html_to_text(html)
+                    except Exception:
+                        text = ""
+                out.append(
+                    {
+                        "paragraf": paragraf,
+                        "absatz": None,
+                        "ueberschrift": (br.get("Kurztitel") or "").strip() or None,
+                        "text": text,
+                        "fassung_vom": sub.get("Inkrafttretensdatum"),
+                        "source_url": dok_url or content_url,
+                        "raw": r,
+                    }
+                )
+            page += 1
+        return out
 
     async def _get(self, url: str, *, params: dict | None = None) -> httpx.Response:
         delay = self.base_delay_s
@@ -260,6 +390,35 @@ def _item_to_str(v: Any, *, sep: str = " | ") -> str | None:
     if isinstance(v, str):
         return v or None
     return str(v)
+
+
+def _refs(data: dict) -> list[dict]:
+    result = data.get("OgdSearchResult") or {}
+    doc_results = result.get("OgdDocumentResults") or {}
+    refs = doc_results.get("OgdDocumentReference") or []
+    if isinstance(refs, dict):
+        refs = [refs]
+    return refs
+
+
+def _br_meta(ref: dict) -> dict | None:
+    meta = (ref.get("Data") or {}).get("Metadaten") or {}
+    br = meta.get("Bundesrecht")
+    return br if isinstance(br, dict) else None
+
+
+def _strip_html(s: str | None) -> str | None:
+    if not s:
+        return None
+    txt = BeautifulSoup(s, "html.parser").get_text(" ", strip=True)
+    return txt or None
+
+
+def _html_to_text(html: str) -> str:
+    soup = BeautifulSoup(html, "html.parser")
+    for tag in soup(["script", "style"]):
+        tag.decompose()
+    return soup.get_text("\n", strip=True)
 
 
 def _extract_content_url(data_obj: dict) -> str | None:
