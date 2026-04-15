@@ -26,3 +26,20 @@ def test_coverage_subcommand_help():
 def test_mcp_help():
     r = CliRunner().invoke(mcp_main, ["--help"])
     assert r.exit_code == 0
+
+
+def test_mcp_doctor_help():
+    r = CliRunner().invoke(mcp_main, ["doctor", "--help"])
+    assert r.exit_code == 0
+
+
+def test_mcp_doctor_runs():
+    r = CliRunner().invoke(mcp_main, ["doctor"])
+    assert r.exit_code == 0
+    assert "ris-mcp doctor" in r.output
+    assert "Python version" in r.output
+
+
+def test_mcp_serve_subcommand_help():
+    r = CliRunner().invoke(mcp_main, ["serve", "--help"])
+    assert r.exit_code == 0

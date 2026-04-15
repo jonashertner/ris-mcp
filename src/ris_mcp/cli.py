@@ -93,8 +93,22 @@ def import_from_hf_cmd(repo: str, revision: str, force: bool) -> None:
     click.echo(f"downloaded {info['path']} ({mb:.1f} MB, sha256 verified)")
 
 
-@click.command("ris-mcp")
-@click.argument("subcommand", type=click.Choice(["serve"]), default="serve")
-def mcp_main(subcommand: str) -> None:
-    if subcommand == "serve":
+@click.group(name="ris-mcp", invoke_without_command=True)
+@click.pass_context
+def mcp_main(ctx: click.Context) -> None:
+    """Austrian RIS plug-in for Claude — run the MCP server or run diagnostics."""
+    if ctx.invoked_subcommand is None:
         mcp_server.main()
+
+
+@mcp_main.command("serve")
+def serve_cmd() -> None:
+    """Run the MCP server over stdio (default when no subcommand is given)."""
+    mcp_server.main()
+
+
+@mcp_main.command("doctor")
+def doctor_cmd() -> None:
+    """Check your ris-mcp installation for common problems."""
+    from .doctor import format_report, run_diagnostics
+    click.echo(format_report(run_diagnostics()))
