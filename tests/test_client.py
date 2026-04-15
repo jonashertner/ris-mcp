@@ -15,6 +15,11 @@ def vfgh_page1() -> dict:
     return json.loads((FIXTURES / "vfgh_search_page1.json").read_text())
 
 
+@pytest.fixture
+def bvwg_page1() -> dict:
+    return json.loads((FIXTURES / "bvwg_search_page1.json").read_text())
+
+
 @respx.mock
 async def test_search_returns_parsed_response(vfgh_page1):
     respx.get(url__regex=r".*/Judikatur.*").mock(return_value=Response(200, json=vfgh_page1))
@@ -56,3 +61,30 @@ async def test_fetch_document_returns_text():
     client = RisClient()
     body = await client.fetch_document("https://example.test/doc.html")
     assert "Hello" in body
+
+
+@respx.mock
+async def test_search_parses_non_judikatur_section(bvwg_page1):
+    respx.get(url__regex=r".*/Judikatur.*").mock(return_value=Response(200, json=bvwg_page1))
+    client = RisClient()
+    resp = await client.search(applikation="Bvwg", page=1, page_size=10)
+    assert resp.hits, "expected at least one Bvwg hit"
+    h = resp.hits[0]
+    assert h.dokument_id, "dokument_id must be non-empty"
+    assert h.geschaeftszahl, "geschaeftszahl must be non-empty"
+
+
+@respx.mock
+async def test_search_uses_persistent_client_in_context(vfgh_page1):
+    respx.get(url__regex=r".*/Judikatur.*").mock(return_value=Response(200, json=vfgh_page1))
+    async with RisClient() as client:
+        await client.search(applikation="Vfgh", page=1, page_size=10)
+        await client.search(applikation="Vfgh", page=2, page_size=10)
+        assert client._http is not None
+    assert client._http is None
+
+
+async def test_search_rejects_unsupported_page_size():
+    client = RisClient()
+    with pytest.raises(ValueError, match="page_size must be one of"):
+        await client.search(applikation="Vfgh", page=1, page_size=33)

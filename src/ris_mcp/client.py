@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import asyncio
 import os
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any
 
 import httpx
@@ -43,6 +43,20 @@ class SearchResponse(BaseModel):
     hits: list[SearchHit]
 
 
+class _NoopAsyncCtx:
+    """Adapter that lets ``async with`` work over a borrowed httpx client
+    without closing it on exit."""
+
+    def __init__(self, c: httpx.AsyncClient) -> None:
+        self._c = c
+
+    async def __aenter__(self) -> httpx.AsyncClient:
+        return self._c
+
+    async def __aexit__(self, *_: Any) -> bool:
+        return False
+
+
 @dataclass
 class RisClient:
     base_url: str = DEFAULT_BASE
@@ -51,6 +65,19 @@ class RisClient:
     base_delay_s: float = 1.0
     user_agent: str = DEFAULT_UA
     timeout_s: float = 30.0
+    _http: httpx.AsyncClient | None = field(default=None, init=False, repr=False)
+
+    async def __aenter__(self) -> "RisClient":
+        self._http = httpx.AsyncClient(
+            timeout=self.timeout_s,
+            headers={"User-Agent": self.user_agent, "Accept": "application/json"},
+        )
+        return self
+
+    async def __aexit__(self, *exc_info: Any) -> None:
+        if self._http is not None:
+            await self._http.aclose()
+            self._http = None
 
     async def search(
         self,
@@ -60,9 +87,15 @@ class RisClient:
         page_size: int = 100,
         aenderungsdatum_from: str | None = None,
     ) -> SearchResponse:
+        try:
+            page_size_enum = PAGE_SIZE_ENUM[page_size]
+        except KeyError:
+            raise ValueError(
+                f"page_size must be one of {sorted(PAGE_SIZE_ENUM)}; got {page_size!r}"
+            ) from None
         params: dict[str, Any] = {
             "Applikation": applikation,
-            "DokumenteProSeite": PAGE_SIZE_ENUM[page_size],
+            "DokumenteProSeite": page_size_enum,
             "Seitennummer": page,
         }
         if aenderungsdatum_from:
@@ -76,10 +109,14 @@ class RisClient:
     async def _get(self, url: str, *, params: dict | None = None) -> httpx.Response:
         delay = self.base_delay_s
         last: httpx.Response | None = None
-        async with httpx.AsyncClient(
-            timeout=self.timeout_s,
-            headers={"User-Agent": self.user_agent, "Accept": "application/json"},
-        ) as c:
+        if self._http is not None:
+            client_ctx: Any = _NoopAsyncCtx(self._http)
+        else:
+            client_ctx = httpx.AsyncClient(
+                timeout=self.timeout_s,
+                headers={"User-Agent": self.user_agent, "Accept": "application/json"},
+            )
+        async with client_ctx as c:
             for _attempt in range(1, self.max_retries + 1):
                 last = await c.get(url, params=params)
                 if last.status_code < 500 and last.status_code != 429:
@@ -88,9 +125,9 @@ class RisClient:
                     return last
                 await asyncio.sleep(delay)
                 delay *= 2
-        assert last is not None
+        if last is None:
+            raise RuntimeError("no response from server")
         last.raise_for_status()
-        return last
 
     async def _get_json(self, url: str, *, params: dict | None = None) -> dict:
         r = await self._get(url, params=params)
@@ -101,7 +138,7 @@ class RisClient:
     def _parse_search(applikation: str, page: int, data: dict) -> SearchResponse:
         """Parse the RIS /Judikatur JSON response.
 
-        Observed shape (VfGH, v2.6, April 2026):
+        Observed shape (VfGH and Bvwg, v2.6, April 2026):
 
             OgdSearchResult.OgdDocumentResults.Hits = {"@pageNumber","@pageSize","#text": "<total>"}
             OgdSearchResult.OgdDocumentResults.OgdDocumentReference = [
@@ -117,6 +154,8 @@ class RisClient:
                                 "Normen": {"item": "..." | [...]},
                                 "Entscheidungsdatum": "YYYY-MM-DD",
                                 "Schlagworte": "str",
+                                # Source-specific sub-section may appear here
+                                # (e.g. "Bvwg": {"Gericht": ..., "Entscheidungsart": ...}).
                                 ...
                             },
                         },
@@ -129,6 +168,10 @@ class RisClient:
                 },
                 ...
             ]
+
+        Defensive against sources where the inner section may be named after the
+        applikation rather than "Judikatur"; falls back to any single dict-valued
+        section that looks like it holds a Geschaeftszahl.
         """
         result = data.get("OgdSearchResult") or {}
         doc_results = result.get("OgdDocumentResults") or {}
@@ -152,7 +195,12 @@ class RisClient:
             metadaten = data_obj.get("Metadaten") or {}
             technisch = metadaten.get("Technisch") or {}
             allgemein = metadaten.get("Allgemein") or {}
-            judikatur = metadaten.get("Judikatur") or {}
+            judikatur = (
+                metadaten.get("Judikatur")
+                or metadaten.get(applikation)
+                or _find_judikatur_like(metadaten)
+                or {}
+            )
 
             gz = _item_to_str(judikatur.get("Geschaeftszahl"))
             normen = _item_to_str(judikatur.get("Normen"), sep=" | ")
@@ -180,6 +228,18 @@ class RisClient:
                 )
             )
         return SearchResponse(applikation=applikation, page=page, total=total, hits=hits)
+
+
+def _find_judikatur_like(metadaten: dict) -> dict | None:
+    """Return the first dict-valued metadata section that contains a
+    ``Geschaeftszahl`` field, skipping known non-judikatur sections."""
+    _skip = {"Technisch", "Allgemein"}
+    for k, v in metadaten.items():
+        if k in _skip:
+            continue
+        if isinstance(v, dict) and "Geschaeftszahl" in v:
+            return v
+    return None
 
 
 def _item_to_str(v: Any, *, sep: str = " | ") -> str | None:
