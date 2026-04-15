@@ -1,6 +1,6 @@
 [project]
 name = "ris-mcp"
-version = "0.1.0.dev0"
+version = "0.2.0"
 description = "MCP server for Austrian RIS (court decisions + federal law) backed by a local FTS5-indexed SQLite mirror"
 readme = "README.md"
 requires-python = ">=3.11"
@@ -13,6 +13,7 @@ dependencies = [
   "click>=8.1",
   "beautifulsoup4>=4.12",
   "lxml>=5.0",
+  "huggingface_hub>=0.24",
 ]
 
 [project.scripts]
