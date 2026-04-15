@@ -17,8 +17,12 @@ def build_server() -> Server:
     conn = open_db()
 
     from .tools import search_decisions as t_sd
-    # Tasks 9 and 10 add: get_decision, get_law
-    tools = {t_sd.TOOL.name: t_sd}
+    from .tools import get_decision as t_gd
+    # Task 10 adds: get_law
+    tools = {
+        t_sd.TOOL.name: t_sd,
+        t_gd.TOOL.name: t_gd,
+    }
 
     @server.list_tools()
     async def _list():
