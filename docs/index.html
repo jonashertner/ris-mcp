@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ris-mcp — Austrian RIS inside Claude</title>
+<meta name="description" content="Local MCP server for Austrian court decisions and federal law. 700k+ decisions, fully offline, queryable from Claude." />
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚖️</text></svg>" />
+</head>
+<body class="bg-slate-50 text-slate-900 font-sans antialiased">
+
+<header class="border-b border-slate-200 bg-white">
+  <div class="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <span class="text-2xl">⚖️</span>
+      <span class="font-semibold">ris-mcp</span>
+    </div>
+    <nav class="flex gap-6 text-sm">
+      <a href="#install" class="hover:text-slate-600">Install</a>
+      <a href="#stats" class="hover:text-slate-600">Stats</a>
+      <a href="#roadmap" class="hover:text-slate-600">Roadmap</a>
+      <a href="https://github.com/jonashertner/ris-mcp" class="hover:text-slate-600">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<section class="max-w-5xl mx-auto px-6 py-20">
+  <h1 class="text-4xl md:text-5xl font-bold tracking-tight">Austrian case law + federal statutes, inside Claude.</h1>
+  <p class="mt-6 text-lg text-slate-600 max-w-3xl">
+    <code>ris-mcp</code> is a local MCP server that mirrors the Austrian Rechtsinformationssystem
+    (RIS) into a searchable SQLite database, so Claude (Desktop, Code, claude.ai) can answer
+    legal-research questions against the full corpus of published Austrian court decisions and
+    consolidated federal law. Free, open, CC0 data.
+  </p>
+  <div class="mt-10 flex flex-wrap gap-3">
+    <a href="#install" class="bg-slate-900 text-white px-5 py-3 rounded-lg font-medium hover:bg-slate-800">Install</a>
+    <a href="https://github.com/jonashertner/ris-mcp" class="border border-slate-300 px-5 py-3 rounded-lg font-medium hover:border-slate-400">GitHub</a>
+  </div>
+</section>
+
+<section class="max-w-5xl mx-auto px-6 py-12 grid md:grid-cols-3 gap-8">
+  <div>
+    <div class="text-3xl">🏛️</div>
+    <h2 class="mt-3 font-semibold">All published case law</h2>
+    <p class="mt-2 text-slate-600 text-sm">OGH, VfGH, VwGH, BVwG, 9 Landesverwaltungsgerichte, and special-body decisions — every judikatur source RIS publishes.</p>
+  </div>
+  <div>
+    <div class="text-3xl">📚</div>
+    <h2 class="mt-3 font-semibold">Consolidated federal law</h2>
+    <p class="mt-2 text-slate-600 text-sm">Every § and Artikel of Austrian Bundesrecht in its current Fassung, searchable alongside the case law that applies it.</p>
+  </div>
+  <div>
+    <div class="text-3xl">⚡</div>
+    <h2 class="mt-3 font-semibold">Sub-ms local search</h2>
+    <p class="mt-2 text-slate-600 text-sm">SQLite + FTS5 BM25 ranking. Your queries never leave your machine. Works offline.</p>
+  </div>
+</section>
+
+<section id="install" class="max-w-5xl mx-auto px-6 py-16 border-t border-slate-200">
+  <h2 class="text-3xl font-bold">Install</h2>
+
+  <!-- HF-DATASET-PENDING -->
+  <div class="mt-6 bg-amber-50 border border-amber-200 rounded-lg p-4 text-sm">
+    <strong>Status:</strong> the pre-built dataset is being uploaded (full backfill takes 2–3 days).
+    Until it lands on HuggingFace, step&nbsp;3 below will fail with a friendly message telling you
+    to run <code>ris-ingest --full</code> locally. Watch the <a href="#stats" class="underline">stats</a> section for updates.
+  </div>
+  <!-- /HF-DATASET-PENDING -->
+
+  <ol class="mt-8 space-y-6 text-slate-800">
+    <li>
+      <div class="font-medium">1. Install <code>uv</code> (the Python package runner).</div>
+      <pre class="mt-2 bg-slate-900 text-slate-100 rounded-lg p-4 text-sm overflow-x-auto"><code>curl -LsSf https://astral.sh/uv/install.sh | sh</code></pre>
+      <p class="text-sm text-slate-500 mt-1">See <a class="underline" href="https://docs.astral.sh/uv/">docs.astral.sh/uv</a> for Windows instructions.</p>
+    </li>
+    <li>
+      <div class="font-medium">2. Register the MCP server with Claude.</div>
+      <pre class="mt-2 bg-slate-900 text-slate-100 rounded-lg p-4 text-sm overflow-x-auto"><code>claude mcp add ris -- uvx --from git+https://github.com/jonashertner/ris-mcp ris-mcp serve</code></pre>
+      <p class="text-sm text-slate-500 mt-1">After <code>ris-mcp</code> is published on PyPI, this simplifies to <code>uvx ris-mcp serve</code>.</p>
+    </li>
+    <li>
+      <div class="font-medium">3. Download the pre-built corpus (one-time, ~12 GB).</div>
+      <pre class="mt-2 bg-slate-900 text-slate-100 rounded-lg p-4 text-sm overflow-x-auto"><code>uvx --from git+https://github.com/jonashertner/ris-mcp ris-ingest import-from-hf</code></pre>
+      <p class="text-sm text-slate-500 mt-1">Or run your own ingest with <code>ris-ingest --full</code> (2–3 days).</p>
+    </li>
+  </ol>
+
+  <h3 class="mt-10 text-xl font-semibold">Claude Desktop config</h3>
+  <p class="text-sm text-slate-600 mt-2">If you'd rather hand-edit <code>~/Library/Application Support/Claude/claude_desktop_config.json</code>:</p>
+  <pre class="mt-3 bg-slate-900 text-slate-100 rounded-lg p-4 text-sm overflow-x-auto"><code>{
+  "mcpServers": {
+    "ris": {
+      "command": "uvx",
+      "args": ["--from", "git+https://github.com/jonashertner/ris-mcp", "ris-mcp", "serve"]
+    }
+  }
+}</code></pre>
+</section>
+
+<section class="max-w-5xl mx-auto px-6 py-16 border-t border-slate-200">
+  <h2 class="text-3xl font-bold">Why not <code>philrox/ris-mcp-ts</code>?</h2>
+  <p class="mt-4 text-slate-600 max-w-3xl">A legitimate TypeScript MCP wrapper for RIS already exists. It's a great fit for casual queries. <code>ris-mcp</code> is a different trade-off: build and maintain a local mirror so you get better answers.</p>
+  <div class="mt-8 overflow-x-auto">
+    <table class="w-full text-sm border border-slate-200 rounded-lg overflow-hidden">
+      <thead class="bg-slate-100 text-left">
+        <tr><th class="p-3">Capability</th><th class="p-3">philrox (live proxy)</th><th class="p-3">ris-mcp (local mirror)</th></tr>
+      </thead>
+      <tbody class="divide-y divide-slate-200">
+        <tr><td class="p-3">Claude can query Austrian law</td><td class="p-3">✅</td><td class="p-3">✅</td></tr>
+        <tr><td class="p-3">Search quality</td><td class="p-3">RIS field-based keyword</td><td class="p-3">FTS5 BM25 over full text</td></tr>
+        <tr><td class="p-3">Latency</td><td class="p-3">2–5 s per query</td><td class="p-3">&lt; 10 ms</td></tr>
+        <tr><td class="p-3">Works offline</td><td class="p-3">❌</td><td class="p-3">✅</td></tr>
+        <tr><td class="p-3">Survives RIS API outages</td><td class="p-3">❌</td><td class="p-3">✅</td></tr>
+        <tr><td class="p-3">Citation graph (future)</td><td class="p-3">❌</td><td class="p-3">Phase 2</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section id="stats" class="max-w-5xl mx-auto px-6 py-16 border-t border-slate-200">
+  <h2 class="text-3xl font-bold">Corpus</h2>
+  <div id="stats-loading" class="mt-4 text-slate-500 text-sm">Loading stats…</div>
+  <div id="stats-body" class="mt-6 hidden">
+    <div class="grid md:grid-cols-3 gap-6">
+      <div class="bg-white border border-slate-200 rounded-lg p-5">
+        <div class="text-sm text-slate-500">Decisions</div>
+        <div id="stats-decisions" class="text-4xl font-bold mt-1">—</div>
+      </div>
+      <div class="bg-white border border-slate-200 rounded-lg p-5">
+        <div class="text-sm text-slate-500">Laws (articles)</div>
+        <div id="stats-laws" class="text-4xl font-bold mt-1">—</div>
+      </div>
+      <div class="bg-white border border-slate-200 rounded-lg p-5">
+        <div class="text-sm text-slate-500">Last refreshed</div>
+        <div id="stats-refreshed" class="text-lg font-medium mt-1">—</div>
+      </div>
+    </div>
+    <h3 class="mt-10 font-semibold">By court</h3>
+    <div id="stats-by-court" class="mt-3 grid md:grid-cols-3 gap-2 text-sm"></div>
+  </div>
+</section>
+
+<section id="roadmap" class="max-w-5xl mx-auto px-6 py-16 border-t border-slate-200">
+  <h2 class="text-3xl font-bold">Roadmap</h2>
+  <ul class="mt-6 space-y-3 text-slate-700">
+    <li>✅ <strong>Phase 1</strong> — ingester, SQLite/FTS5 store, three MCP tools.</li>
+    <li>🚧 <strong>Phase 1.5</strong> — PyPI release, public landing page, pre-built HF dataset.</li>
+    <li>🔜 <strong>Phase 2</strong> — resolved citation graph: find_leading_cases, find_citations, find_appeal_chain.</li>
+    <li>🔜 <strong>Phase 3</strong> — semantic reranking and a remote hosted MCP endpoint (no local install).</li>
+    <li>🔜 <strong>Phase 4</strong> — Materialien: RV-Begründungen and Stenographische Protokolle for teleological interpretation.</li>
+    <li>🔜 <strong>Phase 5</strong> — Landesrecht, commentary integration if viable.</li>
+  </ul>
+</section>
+
+<footer class="border-t border-slate-200 mt-16">
+  <div class="max-w-5xl mx-auto px-6 py-10 text-sm text-slate-600">
+    <p>
+      Code: MIT. Data: CC0-1.0 — Austrian RIS content is amtliches Werk per § 7 öUrhG.
+      Not legal advice. Builds on the documentation work of
+      <a class="underline" href="https://github.com/ximex/ris-bka">ximex/ris-bka</a>,
+      learns from
+      <a class="underline" href="https://github.com/philrox/ris-mcp-ts">philrox/ris-mcp-ts</a>,
+      <a class="underline" href="https://github.com/PhilippTh/ris-API-wrapper">PhilippTh/ris-API-wrapper</a>, and
+      <a class="underline" href="https://opencaselaw.ch">opencaselaw.ch</a>.
+    </p>
+  </div>
+</footer>
+
+<script>
+  (async () => {
+    const loading = document.getElementById("stats-loading");
+    const body = document.getElementById("stats-body");
+    const courtsEl = document.getElementById("stats-by-court");
+
+    const makeRow = (court, count, fmt) => {
+      const row = document.createElement("div");
+      row.className = "flex justify-between bg-white border border-slate-200 rounded-lg p-3";
+      const name = document.createElement("span");
+      name.textContent = court;
+      const num = document.createElement("span");
+      num.className = "font-medium";
+      num.textContent = fmt(count);
+      row.appendChild(name);
+      row.appendChild(num);
+      return row;
+    };
+
+    const makeEmpty = (msg) => {
+      const d = document.createElement("div");
+      d.className = "text-slate-500";
+      d.textContent = msg;
+      return d;
+    };
+
+    try {
+      const r = await fetch("stats.json", { cache: "no-cache" });
+      if (!r.ok) throw new Error("no stats");
+      const s = await r.json();
+      const fmt = (n) => (n || 0).toLocaleString("en-US");
+
+      document.getElementById("stats-decisions").textContent = fmt(s.total_decisions);
+      document.getElementById("stats-laws").textContent = fmt(s.total_laws);
+      const refreshed = s.generated_at
+        ? s.generated_at.slice(0, 19).replace("T", " ") + " UTC"
+        : "—";
+      document.getElementById("stats-refreshed").textContent = refreshed;
+
+      const byCourt = s.decisions_by_court || {};
+      const entries = Object.entries(byCourt).sort((a, b) => b[1] - a[1]);
+      if (entries.length === 0) {
+        courtsEl.appendChild(makeEmpty("No decisions yet — backfill in progress."));
+      } else {
+        for (const [court, count] of entries) {
+          courtsEl.appendChild(makeRow(court, count, fmt));
+        }
+      }
+
+      loading.classList.add("hidden");
+      body.classList.remove("hidden");
+    } catch (e) {
+      loading.textContent = "Stats not available yet.";
+    }
+  })();
+</script>
+</body>
+</html>
