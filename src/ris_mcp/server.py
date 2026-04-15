@@ -18,10 +18,11 @@ def build_server() -> Server:
 
     from .tools import search_decisions as t_sd
     from .tools import get_decision as t_gd
-    # Task 10 adds: get_law
+    from .tools import get_law as t_gl
     tools = {
         t_sd.TOOL.name: t_sd,
         t_gd.TOOL.name: t_gd,
+        t_gl.TOOL.name: t_gl,
     }
 
     @server.list_tools()
