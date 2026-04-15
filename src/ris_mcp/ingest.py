@@ -27,7 +27,9 @@ def _html_to_text(html: str) -> str:
     return soup.get_text(separator="\n", strip=True)
 
 
-def _row_from_hit(hit: SearchHit, applikation: str, court: str, full_text_html: str) -> dict[str, Any]:
+def _row_from_hit(
+    hit: SearchHit, applikation: str, court: str, full_text_html: str,
+) -> dict[str, Any]:
     text = _html_to_text(full_text_html) if full_text_html else (hit.rechtssatz or "")
     return {
         "id": f"{applikation}:{hit.dokument_id}",
@@ -88,7 +90,9 @@ async def ingest_applikation(
             row = _row_from_hit(hit, applikation, cfg.court, full_html)
             upsert_decision(conn, row)
             total += 1
-            if hit.aenderungsdatum and (max_aenderung is None or hit.aenderungsdatum > max_aenderung):
+            if hit.aenderungsdatum and (
+                max_aenderung is None or hit.aenderungsdatum > max_aenderung
+            ):
                 max_aenderung = hit.aenderungsdatum
         page += 1
 

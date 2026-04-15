@@ -37,7 +37,9 @@ async def test_ingest_writes_decisions(tmp_db, fake_client):
 
 async def test_ingest_advances_watermark(tmp_db, fake_client):
     await ingest_applikation(fake_client, tmp_db, applikation="Vfgh")
-    state = tmp_db.execute("SELECT watermark_aenderungsdatum FROM sync_state WHERE applikation='Vfgh'").fetchone()
+    state = tmp_db.execute(
+        "SELECT watermark_aenderungsdatum FROM sync_state WHERE applikation='Vfgh'"
+    ).fetchone()
     assert state["watermark_aenderungsdatum"] == "2024-01-04T10:00:00"
 
 
@@ -57,7 +59,10 @@ async def test_ingest_warns_on_empty_geschaeftszahl(tmp_db, caplog):
     client = AsyncMock()
     client.search.side_effect = [
         SearchResponse(applikation="Vfgh", page=1, hits=[
-            SearchHit(dokument_id="orphan-1", geschaeftszahl="", aenderungsdatum="2024-01-01T00:00:00"),
+            SearchHit(
+                dokument_id="orphan-1", geschaeftszahl="",
+                aenderungsdatum="2024-01-01T00:00:00",
+            ),
         ]),
         SearchResponse(applikation="Vfgh", page=2, hits=[]),
     ]

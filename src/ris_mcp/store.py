@@ -73,16 +73,22 @@ def set_sync_state(
     fields = ["applikation"]
     values: list = [applikation]
     if watermark is not None:
-        fields.append("watermark_aenderungsdatum"); values.append(watermark)
+        fields.append("watermark_aenderungsdatum")
+        values.append(watermark)
     if delta:
-        fields.append("last_delta_sync"); values.append("CURRENT_TIMESTAMP_PLACEHOLDER")
+        fields.append("last_delta_sync")
+        values.append("CURRENT_TIMESTAMP_PLACEHOLDER")
     if full:
-        fields.append("last_full_sync"); values.append("CURRENT_TIMESTAMP_PLACEHOLDER")
+        fields.append("last_full_sync")
+        values.append("CURRENT_TIMESTAMP_PLACEHOLDER")
     if total is not None:
-        fields.append("total_docs"); values.append(total)
+        fields.append("total_docs")
+        values.append(total)
     # Build manually to support CURRENT_TIMESTAMP literal
     cols = ", ".join(fields)
-    placeholders = ", ".join("CURRENT_TIMESTAMP" if v == "CURRENT_TIMESTAMP_PLACEHOLDER" else "?" for v in values)
+    placeholders = ", ".join(
+        "CURRENT_TIMESTAMP" if v == "CURRENT_TIMESTAMP_PLACEHOLDER" else "?" for v in values
+    )
     bind = [v for v in values if v != "CURRENT_TIMESTAMP_PLACEHOLDER"]
     updates = ", ".join(
         f"{f}=CURRENT_TIMESTAMP" if v == "CURRENT_TIMESTAMP_PLACEHOLDER" else f"{f}=excluded.{f}"

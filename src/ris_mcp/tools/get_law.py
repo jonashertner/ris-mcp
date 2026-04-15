@@ -6,7 +6,6 @@ import sqlite3
 
 from mcp.types import TextContent, Tool
 
-
 _PREFIX_RX = re.compile(r"^\s*(§|Art\.?|Artikel|Para\.?)\s*", re.IGNORECASE)
 
 
@@ -29,7 +28,10 @@ def get_law(conn: sqlite3.Connection, *, kurztitel: str, paragraf: str) -> dict 
 
 TOOL = Tool(
     name="get_law",
-    description="Retrieve a single Austrian federal-law article (current consolidated Fassung) by short title (e.g. ABGB) and paragraph number.",
+    description=(
+        "Retrieve a single Austrian federal-law article (current consolidated Fassung) "
+        "by short title (e.g. ABGB) and paragraph number."
+    ),
     inputSchema={
         "type": "object",
         "properties": {
@@ -43,4 +45,5 @@ TOOL = Tool(
 
 async def handle(conn, arguments: dict):
     out = get_law(conn, **arguments)
-    return [TextContent(type="text", text=json.dumps(out, ensure_ascii=False, indent=2, default=str))]
+    text = json.dumps(out, ensure_ascii=False, indent=2, default=str)
+    return [TextContent(type="text", text=text)]

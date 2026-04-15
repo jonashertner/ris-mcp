@@ -68,7 +68,7 @@ class RisClient:
     timeout_s: float = 30.0
     _http: httpx.AsyncClient | None = field(default=None, init=False, repr=False)
 
-    async def __aenter__(self) -> "RisClient":
+    async def __aenter__(self) -> RisClient:
         self._http = httpx.AsyncClient(
             timeout=self.timeout_s,
             headers={"User-Agent": self.user_agent, "Accept": "application/json"},

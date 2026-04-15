@@ -64,4 +64,5 @@ TOOL = Tool(
 
 async def handle(conn, arguments: dict):
     out = get_decision(conn, **arguments)
-    return [TextContent(type="text", text=json.dumps(out, ensure_ascii=False, indent=2, default=str))]
+    text = json.dumps(out, ensure_ascii=False, indent=2, default=str)
+    return [TextContent(type="text", text=text)]

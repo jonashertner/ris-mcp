@@ -43,7 +43,10 @@ def test_search_filters_by_court(tmp_db):
 
 def test_search_respects_date_range(tmp_db):
     _seed(tmp_db)
-    out = search_decisions(tmp_db, query="Beschwerde OR Vertrag", date_from="2024-05-15", date_to="2024-12-31")
+    out = search_decisions(
+        tmp_db, query="Beschwerde OR Vertrag",
+        date_from="2024-05-15", date_to="2024-12-31",
+    )
     assert {r["geschaeftszahl"] for r in out} == {"G1/24"}
 
 

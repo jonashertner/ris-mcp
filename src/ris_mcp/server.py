@@ -16,9 +16,9 @@ def build_server() -> Server:
     server = Server("ris-mcp")
     conn = open_db()
 
-    from .tools import search_decisions as t_sd
     from .tools import get_decision as t_gd
     from .tools import get_law as t_gl
+    from .tools import search_decisions as t_sd
     tools = {
         t_sd.TOOL.name: t_sd,
         t_gd.TOOL.name: t_gd,

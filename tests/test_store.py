@@ -1,7 +1,11 @@
 import datetime as dt
 
 from ris_mcp.store import (
-    default_db_path, get_sync_state, open_db, set_sync_state, upsert_decision, upsert_law,
+    default_db_path,
+    get_sync_state,
+    set_sync_state,
+    upsert_decision,
+    upsert_law,
 )
 
 
@@ -63,7 +67,9 @@ def test_upsert_law_round_trips(tmp_db):
         "fassung_vom": "2024-01-01", "source_url": None,
         "fetched_at": "2024-06-01T00:00:00", "raw_json": "{}",
     })
-    rows = tmp_db.execute("SELECT rowid FROM laws_fts WHERE laws_fts MATCH 'Sittenwidrig*'").fetchall()
+    rows = tmp_db.execute(
+        "SELECT rowid FROM laws_fts WHERE laws_fts MATCH 'Sittenwidrig*'"
+    ).fetchall()
     assert rows
 
 
