@@ -84,10 +84,10 @@ def import_from_hf_cmd(repo: str, revision: str, force: bool) -> None:
         info = import_from_hf(repo=repo, revision=revision, force=force)
     except DatasetNotPublishedError as e:
         click.echo(f"error: {e}", err=True)
-        raise SystemExit(2)
+        raise SystemExit(2) from e
     except FileExistsError as e:
         click.echo(f"error: {e}", err=True)
-        raise SystemExit(1)
+        raise SystemExit(1) from e
 
     mb = info["bytes"] / (1024 * 1024)
     click.echo(f"downloaded {info['path']} ({mb:.1f} MB, sha256 verified)")

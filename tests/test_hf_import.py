@@ -53,9 +53,9 @@ def test_import_from_hf_raises_dataset_not_published(tmp_path, monkeypatch):
     from huggingface_hub.utils import RepositoryNotFoundError
     response = httpx.Response(404, request=httpx.Request("GET", "https://hf.co"))
     err = RepositoryNotFoundError("no such repo", response=response)
-    with patch("ris_mcp.hf_import.hf_hub_download", side_effect=err):
-        with pytest.raises(DatasetNotPublishedError):
-            import_from_hf(repo="voilaj/austrian-caselaw")
+    with patch("ris_mcp.hf_import.hf_hub_download", side_effect=err), \
+            pytest.raises(DatasetNotPublishedError):
+        import_from_hf(repo="voilaj/austrian-caselaw")
 
 
 def test_import_from_hf_verifies_sha256(tmp_path, monkeypatch):
@@ -73,7 +73,7 @@ def test_import_from_hf_verifies_sha256(tmp_path, monkeypatch):
             p.write_text(f"{wrong_sha}  ris.db\n")
         return str(p)
 
-    with patch("ris_mcp.hf_import.hf_hub_download", side_effect=fake_download):
-        with pytest.raises(ValueError, match="sha256 mismatch"):
-            import_from_hf(repo="voilaj/austrian-caselaw")
+    with patch("ris_mcp.hf_import.hf_hub_download", side_effect=fake_download), \
+            pytest.raises(ValueError, match="sha256 mismatch"):
+        import_from_hf(repo="voilaj/austrian-caselaw")
     assert not (tmp_path / "ris.db").exists()
