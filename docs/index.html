@@ -3,9 +3,18 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>ris-mcp — Austrian RIS inside Claude</title>
-<meta name="description" content="Local MCP server for Austrian court decisions and federal law. 700k+ decisions, fully offline, queryable from Claude." />
+<title>ris-mcp — ask Claude about Austrian law · Claude nach österreichischem Recht fragen</title>
+<meta name="description" data-lang="en" content="A free local plug-in that lets Claude answer questions about Austrian court decisions and federal statutes, grounded in the real text." />
+<meta name="description" data-lang="de" content="Ein kostenloses lokales Plug-in, mit dem Claude Fragen zur österreichischen Judikatur und Bundesgesetzgebung direkt aus dem amtlichen Text beantwortet." />
 <script src="https://cdn.tailwindcss.com"></script>
+<style>
+  html[lang="en"] [data-lang="de"] { display: none !important; }
+  html[lang="de"] [data-lang="en"] { display: none !important; }
+  .lang-btn { padding: 0.2rem 0.5rem; border-radius: 0.25rem; font-size: 0.75rem; letter-spacing: 0.05em; }
+  .lang-btn[aria-pressed="true"] { background: #0f172a; color: #fff; }
+  .lang-btn[aria-pressed="false"] { color: #64748b; }
+  .lang-btn[aria-pressed="false"]:hover { color: #0f172a; }
+</style>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚖️</text></svg>" />
 </head>
 <body class="bg-slate-50 text-slate-900 font-sans antialiased">
@@ -16,158 +25,597 @@
       <span class="text-2xl">⚖️</span>
       <span class="font-semibold">ris-mcp</span>
     </div>
-    <nav class="flex gap-6 text-sm">
-      <a href="#install" class="hover:text-slate-600">Install</a>
-      <a href="#stats" class="hover:text-slate-600">Stats</a>
-      <a href="#roadmap" class="hover:text-slate-600">Roadmap</a>
+    <nav class="flex gap-6 text-sm items-center">
+      <a href="#examples" class="hover:text-slate-600"><span data-lang="en">Examples</span><span data-lang="de">Beispiele</span></a>
+      <a href="#install" class="hover:text-slate-600"><span data-lang="en">Install</span><span data-lang="de">Installation</span></a>
+      <a href="#status" class="hover:text-slate-600"><span data-lang="en">Status</span><span data-lang="de">Status</span></a>
+      <a href="#roadmap" class="hover:text-slate-600"><span data-lang="en">Roadmap</span><span data-lang="de">Fahrplan</span></a>
       <a href="https://github.com/jonashertner/ris-mcp" class="hover:text-slate-600">GitHub</a>
+      <span class="ml-2 flex items-center gap-1 border border-slate-200 rounded-md">
+        <button id="lang-de" class="lang-btn" aria-pressed="false" type="button">DE</button>
+        <button id="lang-en" class="lang-btn" aria-pressed="false" type="button">EN</button>
+      </span>
     </nav>
   </div>
 </header>
 
+<!-- HERO -->
 <section class="max-w-5xl mx-auto px-6 py-20">
-  <h1 class="text-4xl md:text-5xl font-bold tracking-tight">Austrian case law + federal statutes, inside Claude.</h1>
-  <p class="mt-6 text-lg text-slate-600 max-w-3xl">
-    <code>ris-mcp</code> is a local MCP server that mirrors the Austrian Rechtsinformationssystem
-    (RIS) into a searchable SQLite database, so Claude (Desktop, Code, claude.ai) can answer
-    legal-research questions against the full corpus of published Austrian court decisions and
-    consolidated federal law. Free, open, CC0 data.
+  <h1 class="text-4xl md:text-5xl font-bold tracking-tight">
+    <span data-lang="en">Ask Claude about Austrian law.</span>
+    <span data-lang="de">Claude nach österreichischem Recht fragen.</span>
+  </h1>
+  <p class="mt-6 text-lg text-slate-600 max-w-3xl" data-lang="en">
+    <code>ris-mcp</code> is a free plug-in for Claude that answers questions about published
+    Austrian court decisions and federal statutes &mdash; grounded in the real text, not made-up
+    citations. It runs on your computer, for free, using the Austrian government's open data.
+  </p>
+  <p class="mt-6 text-lg text-slate-600 max-w-3xl" data-lang="de">
+    <code>ris-mcp</code> ist ein kostenloses Plug-in für Claude, das Fragen zur veröffentlichten
+    österreichischen Judikatur und zur konsolidierten Bundesgesetzgebung beantwortet &mdash;
+    direkt aus dem amtlichen Text, ohne erfundene Zitate. Es läuft lokal auf Ihrem Rechner,
+    kostenlos, mit den offenen Daten des Bundes.
   </p>
   <div class="mt-10 flex flex-wrap gap-3">
-    <a href="#install" class="bg-slate-900 text-white px-5 py-3 rounded-lg font-medium hover:bg-slate-800">Install</a>
-    <a href="https://github.com/jonashertner/ris-mcp" class="border border-slate-300 px-5 py-3 rounded-lg font-medium hover:border-slate-400">GitHub</a>
+    <a href="#install" class="bg-slate-900 text-white px-5 py-3 rounded-lg font-medium hover:bg-slate-800">
+      <span data-lang="en">How to install</span><span data-lang="de">Installation</span>
+    </a>
+    <a href="#examples" class="border border-slate-300 px-5 py-3 rounded-lg font-medium hover:border-slate-400">
+      <span data-lang="en">See what you can ask</span><span data-lang="de">Beispielfragen ansehen</span>
+    </a>
   </div>
 </section>
 
-<section class="max-w-5xl mx-auto px-6 py-12 grid md:grid-cols-3 gap-8">
-  <div>
-    <div class="text-3xl">🏛️</div>
-    <h2 class="mt-3 font-semibold">All published case law</h2>
-    <p class="mt-2 text-slate-600 text-sm">OGH, VfGH, VwGH, BVwG, 9 Landesverwaltungsgerichte, and special-body decisions — every judikatur source RIS publishes.</p>
+<!-- EXAMPLES -->
+<section id="examples" class="max-w-5xl mx-auto px-6 py-12 border-t border-slate-200">
+  <h2 class="text-3xl font-bold">
+    <span data-lang="en">What you can ask Claude</span>
+    <span data-lang="de">Beispielfragen an Claude</span>
+  </h2>
+  <p class="mt-3 text-slate-600 max-w-3xl" data-lang="en">
+    Once the plug-in is active, you just chat with Claude as usual &mdash; it looks up the answer in
+    the local database of Austrian law and returns the real text, not a guess. A few examples:
+  </p>
+  <p class="mt-3 text-slate-600 max-w-3xl" data-lang="de">
+    Sobald das Plug-in aktiv ist, stellen Sie Claude Ihre Fragen wie gewohnt &mdash; das Tool
+    schlägt den Text in der lokalen Datenbank nach und liefert den tatsächlichen Wortlaut statt
+    einer Vermutung. Ein paar Beispiele:
+  </p>
+  <div class="mt-8 grid md:grid-cols-2 gap-4 text-sm">
+
+    <div class="bg-white border border-slate-200 rounded-lg p-5">
+      <div class="text-slate-500 text-xs uppercase tracking-wide">
+        <span data-lang="en">Statute lookup</span><span data-lang="de">Gesetzesabfrage</span>
+      </div>
+      <p class="mt-2 text-slate-800">&ldquo;Was sagt § 879 ABGB zu sittenwidrigen Verträgen?&rdquo;</p>
+    </div>
+
+    <div class="bg-white border border-slate-200 rounded-lg p-5">
+      <div class="text-slate-500 text-xs uppercase tracking-wide">
+        <span data-lang="en">Case-law research</span><span data-lang="de">Judikaturrecherche</span>
+      </div>
+      <p class="mt-2 text-slate-800" data-lang="en">&ldquo;Find recent OGH decisions on termination of a tenancy for cause.&rdquo;</p>
+      <p class="mt-2 text-slate-800" data-lang="de">&ldquo;Suche aktuelle OGH-Entscheidungen zur Auflösung eines Mietvertrages aus wichtigem Grund.&rdquo;</p>
+    </div>
+
+    <div class="bg-white border border-slate-200 rounded-lg p-5">
+      <div class="text-slate-500 text-xs uppercase tracking-wide">
+        <span data-lang="en">Constitutional</span><span data-lang="de">Verfassungsrecht</span>
+      </div>
+      <p class="mt-2 text-slate-800" data-lang="en">&ldquo;Summarise how the Verfassungsgerichtshof has interpreted Art. 7 B-VG since 2020.&rdquo;</p>
+      <p class="mt-2 text-slate-800" data-lang="de">&ldquo;Fasse zusammen, wie der VfGH Art. 7 B-VG seit 2020 ausgelegt hat.&rdquo;</p>
+    </div>
+
+    <div class="bg-white border border-slate-200 rounded-lg p-5">
+      <div class="text-slate-500 text-xs uppercase tracking-wide">
+        <span data-lang="en">Specific docket</span><span data-lang="de">Konkrete Geschäftszahl</span>
+      </div>
+      <p class="mt-2 text-slate-800">&ldquo;Hol mir den Volltext von OGH 6 Ob 123/24a.&rdquo;</p>
+    </div>
+
+    <div class="bg-white border border-slate-200 rounded-lg p-5">
+      <div class="text-slate-500 text-xs uppercase tracking-wide">
+        <span data-lang="en">Administrative law</span><span data-lang="de">Verwaltungsrecht</span>
+      </div>
+      <p class="mt-2 text-slate-800" data-lang="en">&ldquo;List VwGH decisions on asylum status from the past year.&rdquo;</p>
+      <p class="mt-2 text-slate-800" data-lang="de">&ldquo;Liste VwGH-Entscheidungen zum Asylstatus aus dem letzten Jahr auf.&rdquo;</p>
+    </div>
+
+    <div class="bg-white border border-slate-200 rounded-lg p-5">
+      <div class="text-slate-500 text-xs uppercase tracking-wide">
+        <span data-lang="en">Plain-language digest</span><span data-lang="de">Einfache Sprache</span>
+      </div>
+      <p class="mt-2 text-slate-800" data-lang="en">&ldquo;Explain § 1295 ABGB in plain German for a non-lawyer.&rdquo;</p>
+      <p class="mt-2 text-slate-800" data-lang="de">&ldquo;Erkläre § 1295 ABGB in einfacher Sprache für Nicht-Juristen.&rdquo;</p>
+    </div>
+
   </div>
-  <div>
-    <div class="text-3xl">📚</div>
-    <h2 class="mt-3 font-semibold">Consolidated federal law</h2>
-    <p class="mt-2 text-slate-600 text-sm">Every § and Artikel of Austrian Bundesrecht in its current Fassung, searchable alongside the case law that applies it.</p>
-  </div>
-  <div>
-    <div class="text-3xl">⚡</div>
-    <h2 class="mt-3 font-semibold">Sub-ms local search</h2>
-    <p class="mt-2 text-slate-600 text-sm">SQLite + FTS5 BM25 ranking. Your queries never leave your machine. Works offline.</p>
-  </div>
+  <p class="mt-8 text-sm text-slate-500" data-lang="en">
+    Claude reads the actual decision or statute before answering. If it can't find something,
+    it says so &mdash; that's the whole point of grounding it in a real database.
+    <strong>Not legal advice.</strong>
+  </p>
+  <p class="mt-8 text-sm text-slate-500" data-lang="de">
+    Claude liest die tatsächliche Entscheidung oder den Gesetzestext, bevor es antwortet. Findet es
+    nichts, sagt es das &mdash; genau das ist der Sinn der lokalen Datenbank.
+    <strong>Dies ersetzt keine Rechtsberatung.</strong>
+  </p>
 </section>
 
-<section id="install" class="max-w-5xl mx-auto px-6 py-16 border-t border-slate-200">
-  <h2 class="text-3xl font-bold">Install</h2>
+<!-- STATUS -->
+<section id="status" class="max-w-5xl mx-auto px-6 py-16 border-t border-slate-200">
+  <h2 class="text-3xl font-bold">
+    <span data-lang="en">What works today, what's coming soon</span>
+    <span data-lang="de">Was heute funktioniert, was bald kommt</span>
+  </h2>
+  <p class="mt-3 text-slate-600 max-w-3xl" data-lang="en">
+    The project is new and the full corpus is still being downloaded from the government
+    database. Here is an honest read of what is usable right now and what is in flight.
+  </p>
+  <p class="mt-3 text-slate-600 max-w-3xl" data-lang="de">
+    Das Projekt ist neu und der vollständige Datenbestand wird gerade aus der Regierungsdatenbank
+    heruntergeladen. Eine ehrliche Einschätzung, was schon funktioniert und was noch läuft:
+  </p>
 
-  <!-- HF-DATASET-PENDING -->
-  <div class="mt-6 bg-amber-50 border border-amber-200 rounded-lg p-4 text-sm">
-    <strong>Status:</strong> the pre-built dataset is being uploaded (full backfill takes 2–3 days).
-    Until it lands on HuggingFace, step&nbsp;3 below will fail with a friendly message telling you
-    to run <code>ris-ingest --full</code> locally. Watch the <a href="#stats" class="underline">stats</a> section for updates.
+  <div class="mt-8 grid md:grid-cols-3 gap-4">
+
+    <div class="bg-emerald-50 border border-emerald-200 rounded-lg p-5">
+      <div class="text-emerald-700 font-semibold" data-lang="en">✅ Works now (early adopters)</div>
+      <div class="text-emerald-700 font-semibold" data-lang="de">✅ Funktioniert bereits (für Early Adopters)</div>
+      <ul class="mt-3 text-sm text-slate-700 space-y-2 list-disc list-inside" data-lang="en">
+        <li>Ordinary-court decisions (OGH, OLG, LG, BG) &mdash; partial, growing by the hour</li>
+        <li>Full-text search inside indexed decisions</li>
+        <li>Retrieving any single decision by Geschäftszahl</li>
+        <li>Free, local, no account needed</li>
+      </ul>
+      <ul class="mt-3 text-sm text-slate-700 space-y-2 list-disc list-inside" data-lang="de">
+        <li>Entscheidungen der ordentlichen Gerichtsbarkeit (OGH, OLG, LG, BG) &mdash; teilweise, stündlich wachsend</li>
+        <li>Volltextsuche in den bereits indexierten Entscheidungen</li>
+        <li>Abruf einer einzelnen Entscheidung über die Geschäftszahl</li>
+        <li>Kostenlos, lokal, ohne Registrierung</li>
+      </ul>
+      <div class="mt-4 text-xs text-slate-500" data-lang="en">
+        Best fit: developers, law students comfortable with a terminal, anyone willing to run a backfill themselves.
+      </div>
+      <div class="mt-4 text-xs text-slate-500" data-lang="de">
+        Geeignet für: Entwickler:innen, Jus-Studierende mit Terminal-Erfahrung, alle, die die Erstbefüllung selbst anstoßen wollen.
+      </div>
+    </div>
+
+    <div class="bg-amber-50 border border-amber-200 rounded-lg p-5">
+      <div class="text-amber-700 font-semibold" data-lang="en">⏳ Coming in a few days</div>
+      <div class="text-amber-700 font-semibold" data-lang="de">⏳ In wenigen Tagen</div>
+      <ul class="mt-3 text-sm text-slate-700 space-y-2 list-disc list-inside" data-lang="en">
+        <li>Every published Austrian court decision &mdash; roughly 700,000 in total</li>
+        <li>Every paragraph of consolidated federal law (ABGB, StGB, B-VG, all of them)</li>
+        <li>A much simpler install: <em>download</em> the ready-made database (~12 GB, one time) instead of building it yourself</li>
+      </ul>
+      <ul class="mt-3 text-sm text-slate-700 space-y-2 list-disc list-inside" data-lang="de">
+        <li>Alle veröffentlichten Entscheidungen österreichischer Gerichte &mdash; rund 700.000 insgesamt</li>
+        <li>Jede Bestimmung der konsolidierten Bundesgesetze (ABGB, StGB, B-VG und alle anderen)</li>
+        <li>Deutlich einfachere Installation: Sie <em>laden</em> die fertige Datenbank (~12 GB, einmalig) statt sie selbst aufzubauen</li>
+      </ul>
+      <div class="mt-4 text-xs text-slate-500" data-lang="en">
+        The initial backfill is running on a laptop right now. When it finishes and the database is uploaded, the three-step install below just works.
+      </div>
+      <div class="mt-4 text-xs text-slate-500" data-lang="de">
+        Die Erstbefüllung läuft gerade im Hintergrund auf einem Laptop. Ist sie fertig und die Datenbank hochgeladen, funktioniert die dreistufige Installation weiter unten einfach so.
+      </div>
+    </div>
+
+    <div class="bg-slate-100 border border-slate-200 rounded-lg p-5">
+      <div class="text-slate-700 font-semibold" data-lang="en">🔮 Coming later</div>
+      <div class="text-slate-700 font-semibold" data-lang="de">🔮 Später</div>
+      <ul class="mt-3 text-sm text-slate-700 space-y-2 list-disc list-inside" data-lang="en">
+        <li><strong>Citation chains</strong> &mdash; &ldquo;which OGH decisions cite this VfGH ruling?&rdquo;</li>
+        <li><strong>Leading-case ranking</strong> &mdash; authoritative decisions on a given statute, weighted by citation count</li>
+        <li><strong>Semantic search</strong> &mdash; find cases by what they are <em>about</em>, not just by keyword</li>
+        <li><strong>Materialien</strong> &mdash; RV-Erläuterungen and Nationalratsdebatten for teleological interpretation</li>
+        <li><strong>Landesrecht</strong> &mdash; state-level legislation</li>
+        <li><strong>Hosted version</strong> &mdash; no local install, just a URL Claude connects to</li>
+      </ul>
+      <ul class="mt-3 text-sm text-slate-700 space-y-2 list-disc list-inside" data-lang="de">
+        <li><strong>Zitationsketten</strong> &mdash; „Welche OGH-Entscheidungen zitieren diesen VfGH-Spruch?"</li>
+        <li><strong>Leitentscheidungen</strong> &mdash; maßgebliche Entscheidungen zu einer Norm, gewichtet nach Zitaten</li>
+        <li><strong>Semantische Suche</strong> &mdash; Entscheidungen nach Thema finden, nicht nur nach Stichwort</li>
+        <li><strong>Materialien</strong> &mdash; RV-Erläuterungen und Nationalratsdebatten für die teleologische Auslegung</li>
+        <li><strong>Landesrecht</strong> &mdash; Landesgesetzgebung</li>
+        <li><strong>Gehostete Version</strong> &mdash; ohne lokale Installation, einfach eine URL für Claude</li>
+      </ul>
+      <div class="mt-4 text-xs text-slate-500" data-lang="en">
+        No dates promised. Sequencing will follow what users actually ask for.
+      </div>
+      <div class="mt-4 text-xs text-slate-500" data-lang="de">
+        Ohne feste Termine. Die Reihenfolge richtet sich nach Nutzerwünschen.
+      </div>
+    </div>
+
   </div>
-  <!-- /HF-DATASET-PENDING -->
 
-  <ol class="mt-8 space-y-6 text-slate-800">
-    <li>
-      <div class="font-medium">1. Install <code>uv</code> (the Python package runner).</div>
-      <pre class="mt-2 bg-slate-900 text-slate-100 rounded-lg p-4 text-sm overflow-x-auto"><code>curl -LsSf https://astral.sh/uv/install.sh | sh</code></pre>
-      <p class="text-sm text-slate-500 mt-1">See <a class="underline" href="https://docs.astral.sh/uv/">docs.astral.sh/uv</a> for Windows instructions.</p>
-    </li>
-    <li>
-      <div class="font-medium">2. Register the MCP server with Claude.</div>
-      <pre class="mt-2 bg-slate-900 text-slate-100 rounded-lg p-4 text-sm overflow-x-auto"><code>claude mcp add ris -- uvx --from git+https://github.com/jonashertner/ris-mcp ris-mcp serve</code></pre>
-      <p class="text-sm text-slate-500 mt-1">After <code>ris-mcp</code> is published on PyPI, this simplifies to <code>uvx ris-mcp serve</code>.</p>
-    </li>
-    <li>
-      <div class="font-medium">3. Download the pre-built corpus (one-time, ~12 GB).</div>
-      <pre class="mt-2 bg-slate-900 text-slate-100 rounded-lg p-4 text-sm overflow-x-auto"><code>uvx --from git+https://github.com/jonashertner/ris-mcp ris-ingest import-from-hf</code></pre>
-      <p class="text-sm text-slate-500 mt-1">Or run your own ingest with <code>ris-ingest --full</code> (2–3 days).</p>
-    </li>
-  </ol>
-
-  <h3 class="mt-10 text-xl font-semibold">Claude Desktop config</h3>
-  <p class="text-sm text-slate-600 mt-2">If you'd rather hand-edit <code>~/Library/Application Support/Claude/claude_desktop_config.json</code>:</p>
-  <pre class="mt-3 bg-slate-900 text-slate-100 rounded-lg p-4 text-sm overflow-x-auto"><code>{
-  "mcpServers": {
-    "ris": {
-      "command": "uvx",
-      "args": ["--from", "git+https://github.com/jonashertner/ris-mcp", "ris-mcp", "serve"]
-    }
-  }
-}</code></pre>
-</section>
-
-<section class="max-w-5xl mx-auto px-6 py-16 border-t border-slate-200">
-  <h2 class="text-3xl font-bold">Why a local mirror?</h2>
-  <p class="mt-4 text-slate-600 max-w-3xl">Querying RIS live on every request means inheriting its field-based keyword search and 2–5 s per-query latency. A local mirror buys better search quality, sub-ms latency, offline capability, and a foundation for a resolved citation graph.</p>
-  <div class="mt-8 overflow-x-auto">
-    <table class="w-full text-sm border border-slate-200 rounded-lg overflow-hidden">
-      <thead class="bg-slate-100 text-left">
-        <tr><th class="p-3">Capability</th><th class="p-3">Live API query</th><th class="p-3">ris-mcp (local mirror)</th></tr>
-      </thead>
-      <tbody class="divide-y divide-slate-200">
-        <tr><td class="p-3">Claude can query Austrian law</td><td class="p-3">✅</td><td class="p-3">✅</td></tr>
-        <tr><td class="p-3">Search quality</td><td class="p-3">RIS field-based keyword</td><td class="p-3">FTS5 BM25 over full text</td></tr>
-        <tr><td class="p-3">Latency</td><td class="p-3">2–5 s per query</td><td class="p-3">&lt; 10 ms</td></tr>
-        <tr><td class="p-3">Works offline</td><td class="p-3">❌</td><td class="p-3">✅</td></tr>
-        <tr><td class="p-3">Survives RIS API outages</td><td class="p-3">❌</td><td class="p-3">✅</td></tr>
-        <tr><td class="p-3">Citation graph (future)</td><td class="p-3">❌</td><td class="p-3">Phase 2</td></tr>
-      </tbody>
-    </table>
-  </div>
-</section>
-
-<section id="stats" class="max-w-5xl mx-auto px-6 py-16 border-t border-slate-200">
-  <h2 class="text-3xl font-bold">Corpus</h2>
-  <div id="stats-loading" class="mt-4 text-slate-500 text-sm">Loading stats…</div>
-  <div id="stats-body" class="mt-6 hidden">
-    <div class="grid md:grid-cols-3 gap-6">
+  <!-- live corpus counter -->
+  <div id="stats-body" class="mt-12 hidden">
+    <h3 class="text-xl font-semibold">
+      <span data-lang="en">Live database status</span><span data-lang="de">Aktueller Datenbankstand</span>
+    </h3>
+    <p class="text-sm text-slate-500 mt-1">
+      <span data-lang="en">Refreshed whenever the maintainer re-runs the backfill.</span>
+      <span data-lang="de">Aktualisiert, sobald der Maintainer die Erstbefüllung neu anstößt.</span>
+    </p>
+    <div class="mt-4 grid md:grid-cols-3 gap-4">
       <div class="bg-white border border-slate-200 rounded-lg p-5">
-        <div class="text-sm text-slate-500">Decisions</div>
+        <div class="text-sm text-slate-500">
+          <span data-lang="en">Decisions indexed</span><span data-lang="de">Indexierte Entscheidungen</span>
+        </div>
         <div id="stats-decisions" class="text-4xl font-bold mt-1">—</div>
       </div>
       <div class="bg-white border border-slate-200 rounded-lg p-5">
-        <div class="text-sm text-slate-500">Laws (articles)</div>
+        <div class="text-sm text-slate-500">
+          <span data-lang="en">Statute articles indexed</span><span data-lang="de">Indexierte Paragraphen</span>
+        </div>
         <div id="stats-laws" class="text-4xl font-bold mt-1">—</div>
       </div>
       <div class="bg-white border border-slate-200 rounded-lg p-5">
-        <div class="text-sm text-slate-500">Last refreshed</div>
+        <div class="text-sm text-slate-500">
+          <span data-lang="en">Last updated</span><span data-lang="de">Zuletzt aktualisiert</span>
+        </div>
         <div id="stats-refreshed" class="text-lg font-medium mt-1">—</div>
       </div>
     </div>
-    <h3 class="mt-10 font-semibold">By court</h3>
-    <div id="stats-by-court" class="mt-3 grid md:grid-cols-3 gap-2 text-sm"></div>
+    <div id="stats-by-court" class="mt-6 grid md:grid-cols-3 gap-2 text-sm"></div>
   </div>
 </section>
 
-<section id="roadmap" class="max-w-5xl mx-auto px-6 py-16 border-t border-slate-200">
-  <h2 class="text-3xl font-bold">Roadmap</h2>
-  <ul class="mt-6 space-y-3 text-slate-700">
-    <li>✅ <strong>Phase 1</strong> — ingester, SQLite/FTS5 store, three MCP tools.</li>
-    <li>🚧 <strong>Phase 1.5</strong> — PyPI release, public landing page, pre-built HF dataset.</li>
-    <li>🔜 <strong>Phase 2</strong> — resolved citation graph: find_leading_cases, find_citations, find_appeal_chain.</li>
-    <li>🔜 <strong>Phase 3</strong> — semantic reranking and a remote hosted MCP endpoint (no local install).</li>
-    <li>🔜 <strong>Phase 4</strong> — Materialien: RV-Begründungen and Stenographische Protokolle for teleological interpretation.</li>
-    <li>🔜 <strong>Phase 5</strong> — Landesrecht, commentary integration if viable.</li>
-  </ul>
+<!-- INSTALL -->
+<section id="install" class="max-w-5xl mx-auto px-6 py-16 border-t border-slate-200">
+  <h2 class="text-3xl font-bold">
+    <span data-lang="en">Install</span><span data-lang="de">Installation</span>
+  </h2>
+
+  <!-- HF-DATASET-PENDING -->
+  <div class="mt-6 bg-amber-50 border border-amber-200 rounded-lg p-4 text-sm">
+    <span data-lang="en">
+      <strong>Heads-up:</strong> the pre-built database is still being prepared (the full backfill
+      takes 2&ndash;3 days on a single laptop). Until it is ready, the final install step below
+      will show a friendly error telling you to either wait or build the database yourself. Check
+      back in a few days or watch
+      <a href="https://github.com/jonashertner/ris-mcp/releases" class="underline">releases on GitHub</a>.
+    </span>
+    <span data-lang="de">
+      <strong>Hinweis:</strong> Die fertige Datenbank wird gerade erstellt (die Erstbefüllung
+      dauert auf einem einzelnen Laptop 2&ndash;3 Tage). Bis dahin zeigt der letzte
+      Installationsschritt eine freundliche Fehlermeldung an, die Sie bittet zu warten oder die
+      Datenbank selbst aufzubauen. Schauen Sie in ein paar Tagen wieder vorbei oder beobachten Sie
+      die <a href="https://github.com/jonashertner/ris-mcp/releases" class="underline">Releases auf GitHub</a>.
+    </span>
+  </div>
+  <!-- /HF-DATASET-PENDING -->
+
+  <div class="mt-10">
+    <h3 class="text-xl font-semibold">
+      <span data-lang="en">For most people &mdash; Claude Desktop</span>
+      <span data-lang="de">Für die meisten &mdash; Claude Desktop</span>
+    </h3>
+    <p class="mt-2 text-slate-600" data-lang="en">
+      This is the path if you use the <a href="https://claude.ai/download" class="underline">Claude Desktop app</a>
+      on Mac or Windows and don't write code day to day. Three small steps.
+    </p>
+    <p class="mt-2 text-slate-600" data-lang="de">
+      Diese Anleitung ist für Sie, wenn Sie die <a href="https://claude.ai/download" class="underline">Claude-Desktop-App</a>
+      auf Mac oder Windows verwenden und im Alltag nicht programmieren. Drei kleine Schritte.
+    </p>
+
+    <ol class="mt-6 space-y-8">
+
+      <li>
+        <div class="font-medium">
+          <span data-lang="en">1. Install <code>uv</code> (a tiny helper that launches the plug-in).</span>
+          <span data-lang="de">1. Installieren Sie <code>uv</code> (ein kleines Hilfsprogramm, das das Plug-in startet).</span>
+        </div>
+        <p class="text-sm text-slate-500 mt-1" data-lang="en">Open the Terminal app (Mac) or PowerShell (Windows) and paste:</p>
+        <p class="text-sm text-slate-500 mt-1" data-lang="de">Öffnen Sie die Terminal-App (Mac) oder PowerShell (Windows) und fügen Sie ein:</p>
+        <div class="mt-2">
+          <div class="text-xs text-slate-500">macOS / Linux:</div>
+          <pre class="mt-1 bg-slate-900 text-slate-100 rounded-lg p-4 text-sm overflow-x-auto"><code>curl -LsSf https://astral.sh/uv/install.sh | sh</code></pre>
+        </div>
+        <div class="mt-2">
+          <div class="text-xs text-slate-500">Windows (PowerShell):</div>
+          <pre class="mt-1 bg-slate-900 text-slate-100 rounded-lg p-4 text-sm overflow-x-auto"><code>powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"</code></pre>
+        </div>
+      </li>
+
+      <li>
+        <div class="font-medium">
+          <span data-lang="en">2. Tell Claude Desktop about the plug-in.</span>
+          <span data-lang="de">2. Claude Desktop das Plug-in bekanntmachen.</span>
+        </div>
+        <p class="text-sm text-slate-500 mt-1" data-lang="en">
+          Open Claude Desktop &rarr; Settings &rarr; Developer &rarr; Edit Config. A JSON file opens.
+          Paste the block below inside the <code>mcpServers</code> object (create it if missing):
+        </p>
+        <p class="text-sm text-slate-500 mt-1" data-lang="de">
+          Öffnen Sie Claude Desktop &rarr; Einstellungen &rarr; Entwickler &rarr; Config bearbeiten.
+          Eine JSON-Datei öffnet sich. Fügen Sie den Block unten im Objekt <code>mcpServers</code> ein
+          (legen Sie dieses an, falls es fehlt):
+        </p>
+        <pre class="mt-3 bg-slate-900 text-slate-100 rounded-lg p-4 text-sm overflow-x-auto"><code>{
+  "mcpServers": {
+    "ris": {
+      "command": "uvx",
+      "args": ["ris-mcp", "serve"]
+    }
+  }
+}</code></pre>
+        <p class="text-sm text-slate-500 mt-2" data-lang="en">
+          Save the file. Quit and re-open Claude Desktop. A 🔌 plug icon should show <code>ris-mcp</code> as connected.
+        </p>
+        <p class="text-sm text-slate-500 mt-2" data-lang="de">
+          Speichern Sie die Datei. Beenden Sie Claude Desktop und öffnen Sie es erneut. Ein 🔌-Symbol zeigt, dass <code>ris-mcp</code> verbunden ist.
+        </p>
+      </li>
+
+      <li>
+        <div class="font-medium">
+          <span data-lang="en">3. Download the database (one-time, ~12 GB).</span>
+          <span data-lang="de">3. Datenbank herunterladen (einmalig, ~12 GB).</span>
+        </div>
+        <p class="text-sm text-slate-500 mt-1" data-lang="en">Back in the terminal:</p>
+        <p class="text-sm text-slate-500 mt-1" data-lang="de">Wieder im Terminal:</p>
+        <pre class="mt-2 bg-slate-900 text-slate-100 rounded-lg p-4 text-sm overflow-x-auto"><code>uvx ris-mcp ingest import-from-hf</code></pre>
+        <p class="text-sm text-slate-500 mt-2" data-lang="en">
+          This downloads everything in one go so Claude can answer instantly afterwards. You only do this once.
+        </p>
+        <p class="text-sm text-slate-500 mt-2" data-lang="de">
+          Damit liegt alles lokal vor und Claude antwortet danach sofort. Der Schritt ist nur einmal nötig.
+        </p>
+      </li>
+
+    </ol>
+
+    <p class="mt-8 text-sm text-slate-500" data-lang="en">
+      Don't use Claude Desktop? The same plug-in works with
+      <a class="underline" href="https://claude.ai/code">Claude Code</a>,
+      Cursor, ChatGPT (via MCP connectors) and any tool that speaks the Model Context Protocol.
+      See the <a class="underline" href="https://github.com/jonashertner/ris-mcp#develop-contributors">developer instructions on GitHub</a>.
+    </p>
+    <p class="mt-8 text-sm text-slate-500" data-lang="de">
+      Sie nutzen nicht Claude Desktop? Das Plug-in funktioniert auch mit
+      <a class="underline" href="https://claude.ai/code">Claude Code</a>,
+      Cursor, ChatGPT (über MCP-Connectors) und jedem Tool, das das Model Context Protocol unterstützt.
+      Details in der <a class="underline" href="https://github.com/jonashertner/ris-mcp#develop-contributors">Entwickleranleitung auf GitHub</a>.
+    </p>
+  </div>
+
+  <details class="mt-10 border border-slate-200 rounded-lg">
+    <summary class="cursor-pointer px-5 py-4 font-medium">
+      <span data-lang="en">Advanced: build the database yourself instead of downloading</span>
+      <span data-lang="de">Fortgeschritten: Datenbank selbst aufbauen statt herunterladen</span>
+    </summary>
+    <div class="px-5 pb-5 text-sm text-slate-700 space-y-2">
+      <p data-lang="en">
+        If you want a fresh copy or don't trust mystery downloads, you can build the database
+        yourself from the official Austrian government API. It takes 2&ndash;3 days and uses
+        about 12 GB of disk.
+      </p>
+      <p data-lang="de">
+        Wenn Sie eine frische Kopie bevorzugen oder einem fremden Download nicht trauen, können Sie
+        die Datenbank selbst aus der offiziellen RIS-API aufbauen. Das dauert 2&ndash;3 Tage und
+        belegt etwa 12 GB.
+      </p>
+      <pre class="bg-slate-900 text-slate-100 rounded-lg p-4 overflow-x-auto"><code>pip install ris-mcp
+ris-ingest --full</code></pre>
+      <p data-lang="en">Running this on a laptop for a few nights works fine — the script resumes where it left off.</p>
+      <p data-lang="de">Auf einem Laptop über mehrere Nächte hinweg funktioniert das problemlos — das Skript macht dort weiter, wo es aufgehört hat.</p>
+    </div>
+  </details>
 </section>
 
-<footer class="border-t border-slate-200 mt-16">
-  <div class="max-w-5xl mx-auto px-6 py-10 text-sm text-slate-600">
-    <p>
-      Code: MIT. Data: CC0-1.0 — Austrian RIS content is amtliches Werk per § 7 öUrhG.
-      Not legal advice. Builds on the RIS OGD documentation at
-      <a class="underline" href="https://github.com/ximex/ris-bka">ximex/ris-bka</a>
-      and takes architectural cues from
-      <a class="underline" href="https://opencaselaw.ch">opencaselaw.ch</a>.
+<!-- TRUST -->
+<section class="max-w-5xl mx-auto px-6 py-16 border-t border-slate-200">
+  <h2 class="text-3xl font-bold">
+    <span data-lang="en">Where the data comes from</span>
+    <span data-lang="de">Woher die Daten stammen</span>
+  </h2>
+  <div class="mt-6 grid md:grid-cols-3 gap-6 text-sm">
+    <div>
+      <div class="font-semibold">
+        <span data-lang="en">Source</span><span data-lang="de">Quelle</span>
+      </div>
+      <p class="mt-1 text-slate-600" data-lang="en">
+        The Austrian government's official <a href="https://www.data.gv.at/katalog/dataset/ris2_6" class="underline">RIS open-data API</a>,
+        published by the Federal Chancellery. No third-party data broker involved.
+      </p>
+      <p class="mt-1 text-slate-600" data-lang="de">
+        Die offizielle <a href="https://www.data.gv.at/katalog/dataset/ris2_6" class="underline">RIS-OGD-API</a>
+        des Bundeskanzleramts. Kein Zwischenhändler, kein Datenhandel.
+      </p>
+    </div>
+    <div>
+      <div class="font-semibold">
+        <span data-lang="en">License</span><span data-lang="de">Lizenz</span>
+      </div>
+      <p class="mt-1 text-slate-600" data-lang="en">
+        Austrian statutes and published decisions are amtliche Werke under § 7 öUrhG and therefore
+        in the public domain. This project redistributes them under Creative Commons Zero.
+      </p>
+      <p class="mt-1 text-slate-600" data-lang="de">
+        Gesetze und veröffentlichte Entscheidungen sind amtliche Werke gemäß § 7 öUrhG und damit
+        gemeinfrei. Dieses Projekt verbreitet sie unter Creative Commons Zero weiter.
+      </p>
+    </div>
+    <div>
+      <div class="font-semibold">
+        <span data-lang="en">Limits</span><span data-lang="de">Grenzen</span>
+      </div>
+      <p class="mt-1 text-slate-600" data-lang="en">
+        <strong>Not legal advice.</strong> Claude can misread, miss, or paraphrase things.
+        Always verify quotes against the source &mdash; every answer links back to RIS.
+      </p>
+      <p class="mt-1 text-slate-600" data-lang="de">
+        <strong>Keine Rechtsberatung.</strong> Claude kann missverstehen, auslassen oder paraphrasieren.
+        Prüfen Sie Zitate immer an der Originalquelle &mdash; jede Antwort enthält den Link ins RIS.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ROADMAP -->
+<section id="roadmap" class="max-w-5xl mx-auto px-6 py-16 border-t border-slate-200">
+  <h2 class="text-3xl font-bold">
+    <span data-lang="en">Roadmap</span><span data-lang="de">Fahrplan</span>
+  </h2>
+  <ol class="mt-6 relative border-l border-slate-300 ml-2">
+    <li class="ml-6 mb-8">
+      <span class="absolute -left-2.5 mt-1.5 w-5 h-5 bg-emerald-500 rounded-full border-2 border-white"></span>
+      <div class="font-semibold">
+        <span data-lang="en">Available today</span><span data-lang="de">Heute verfügbar</span>
+      </div>
+      <p class="text-sm text-slate-600 mt-1" data-lang="en">
+        Ask Claude to find and summarise Austrian court decisions and statutes from the data that
+        is already indexed. Runs entirely on your computer; works offline once the database is downloaded.
+      </p>
+      <p class="text-sm text-slate-600 mt-1" data-lang="de">
+        Fragen Sie Claude nach Entscheidungen und Gesetzen aus den bereits indexierten Daten, und lassen
+        Sie sich Zusammenfassungen erstellen. Läuft vollständig lokal; funktioniert offline, sobald die
+        Datenbank heruntergeladen ist.
+      </p>
+    </li>
+    <li class="ml-6 mb-8">
+      <span class="absolute -left-2.5 mt-1.5 w-5 h-5 bg-amber-500 rounded-full border-2 border-white"></span>
+      <div class="font-semibold">
+        <span data-lang="en">In the next few days</span><span data-lang="de">In den nächsten Tagen</span>
+      </div>
+      <p class="text-sm text-slate-600 mt-1" data-lang="en">
+        Full coverage of every published Austrian court (OGH, OLG, LG, BG, VfGH, VwGH, BVwG, all nine
+        Landesverwaltungsgerichte, data-protection and equal-treatment bodies) plus the complete text
+        of consolidated federal law. A ready-made database you download instead of building.
+      </p>
+      <p class="text-sm text-slate-600 mt-1" data-lang="de">
+        Vollständige Abdeckung jeder veröffentlichenden österreichischen Gerichtsbarkeit (OGH, OLG, LG,
+        BG, VfGH, VwGH, BVwG, alle neun Landesverwaltungsgerichte, Datenschutz- und Gleichbehandlungsorgane)
+        plus der gesamte Text der konsolidierten Bundesgesetzgebung. Als fertige Datenbank zum Download.
+      </p>
+    </li>
+    <li class="ml-6 mb-8">
+      <span class="absolute -left-2.5 mt-1.5 w-5 h-5 bg-slate-400 rounded-full border-2 border-white"></span>
+      <div class="font-semibold">
+        <span data-lang="en">After that: smarter research tools</span>
+        <span data-lang="de">Danach: klügere Recherchewerkzeuge</span>
+      </div>
+      <p class="text-sm text-slate-600 mt-1" data-lang="en">
+        Citation chains (&ldquo;which cases cite this one?&rdquo;), leading-case ranking by citation
+        weight and AI-assisted semantic search that finds cases by topic rather than literal keyword.
+      </p>
+      <p class="text-sm text-slate-600 mt-1" data-lang="de">
+        Zitationsketten („Welche Entscheidungen zitieren diese hier?"), Leitentscheidungen nach
+        Zitationsgewicht und KI-gestützte semantische Suche, die Fälle nach Thema findet statt nur
+        nach Stichwort.
+      </p>
+    </li>
+    <li class="ml-6 mb-8">
+      <span class="absolute -left-2.5 mt-1.5 w-5 h-5 bg-slate-400 rounded-full border-2 border-white"></span>
+      <div class="font-semibold">
+        <span data-lang="en">Later: legislative history &amp; state law</span>
+        <span data-lang="de">Später: Materialien &amp; Landesrecht</span>
+      </div>
+      <p class="text-sm text-slate-600 mt-1" data-lang="en">
+        Erläuternde Bemerkungen der Regierungsvorlage and Nationalratsstenographische Protokolle for
+        teleological interpretation. Landesrecht (the nine provinces' own laws).
+      </p>
+      <p class="text-sm text-slate-600 mt-1" data-lang="de">
+        Erläuternde Bemerkungen der Regierungsvorlage sowie Stenographische Protokolle des
+        Nationalrats für die teleologische Auslegung. Landesrecht aller neun Bundesländer.
+      </p>
+    </li>
+    <li class="ml-6">
+      <span class="absolute -left-2.5 mt-1.5 w-5 h-5 bg-slate-400 rounded-full border-2 border-white"></span>
+      <div class="font-semibold">
+        <span data-lang="en">Someday: zero-install hosted version</span>
+        <span data-lang="de">Irgendwann: gehostete Version ohne Installation</span>
+      </div>
+      <p class="text-sm text-slate-600 mt-1" data-lang="en">
+        A URL Claude can connect to directly, so non-technical users do not need to install anything.
+      </p>
+      <p class="text-sm text-slate-600 mt-1" data-lang="de">
+        Eine URL, mit der sich Claude direkt verbindet, sodass auch Nicht-Techniker:innen nichts installieren müssen.
+      </p>
+    </li>
+  </ol>
+</section>
+
+<footer class="border-t border-slate-200 mt-8">
+  <div class="max-w-5xl mx-auto px-6 py-10 text-sm text-slate-600 space-y-3">
+    <p data-lang="en">
+      Code: MIT. Data: CC0-1.0 &mdash; Austrian RIS content is amtliches Werk per § 7 öUrhG.
     </p>
+    <p data-lang="de">
+      Code: MIT. Daten: CC0-1.0 &mdash; RIS-Inhalte sind amtliche Werke gemäß § 7 öUrhG.
+    </p>
+    <p data-lang="en">
+      Built on the RIS OGD documentation at
+      <a class="underline" href="https://github.com/ximex/ris-bka">ximex/ris-bka</a>.
+      Architectural cues from <a class="underline" href="https://opencaselaw.ch">opencaselaw.ch</a>.
+    </p>
+    <p data-lang="de">
+      Basierend auf der RIS-OGD-Dokumentation von
+      <a class="underline" href="https://github.com/ximex/ris-bka">ximex/ris-bka</a>.
+      Architektonisch inspiriert von <a class="underline" href="https://opencaselaw.ch">opencaselaw.ch</a>.
+    </p>
+    <p class="text-slate-500" data-lang="en">Not legal advice. Always verify quotes against the original.</p>
+    <p class="text-slate-500" data-lang="de">Keine Rechtsberatung. Zitate immer am Originaltext prüfen.</p>
   </div>
 </footer>
 
 <script>
+  (() => {
+    const KEY = "ris_lang";
+    const VALID = ["en", "de"];
+
+    const params = new URLSearchParams(window.location.search);
+    const fromQuery = params.get("lang");
+    const fromStorage = (() => {
+      try { return localStorage.getItem(KEY); } catch (e) { return null; }
+    })();
+    const fromBrowser = (navigator.language || "en").toLowerCase().startsWith("de") ? "de" : "en";
+
+    let lang = VALID.includes(fromQuery) ? fromQuery
+             : VALID.includes(fromStorage) ? fromStorage
+             : fromBrowser;
+
+    const apply = (next) => {
+      if (!VALID.includes(next)) return;
+      lang = next;
+      document.documentElement.lang = next;
+      try { localStorage.setItem(KEY, next); } catch (e) { /* no-op */ }
+      const enBtn = document.getElementById("lang-en");
+      const deBtn = document.getElementById("lang-de");
+      if (enBtn) enBtn.setAttribute("aria-pressed", next === "en" ? "true" : "false");
+      if (deBtn) deBtn.setAttribute("aria-pressed", next === "de" ? "true" : "false");
+      const title = document.title;
+      // Let the <meta> description pick up automatically via the CSS rule — no JS needed for that.
+      // For crawlers, also flip any alternate meta description:
+      document.querySelectorAll("meta[name='description'][data-lang]").forEach((m) => {
+        m.setAttribute("data-active", m.getAttribute("data-lang") === next ? "true" : "false");
+      });
+    };
+
+    const init = () => {
+      apply(lang);
+      const enBtn = document.getElementById("lang-en");
+      const deBtn = document.getElementById("lang-de");
+      if (enBtn) enBtn.addEventListener("click", () => apply("en"));
+      if (deBtn) deBtn.addEventListener("click", () => apply("de"));
+    };
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", init);
+    } else {
+      init();
+    }
+  })();
+</script>
+
+<script>
   (async () => {
-    const loading = document.getElementById("stats-loading");
     const body = document.getElementById("stats-body");
     const courtsEl = document.getElementById("stats-by-court");
 
@@ -184,40 +632,28 @@
       return row;
     };
 
-    const makeEmpty = (msg) => {
-      const d = document.createElement("div");
-      d.className = "text-slate-500";
-      d.textContent = msg;
-      return d;
-    };
-
     try {
       const r = await fetch("stats.json", { cache: "no-cache" });
-      if (!r.ok) throw new Error("no stats");
+      if (!r.ok) return;
       const s = await r.json();
-      const fmt = (n) => (n || 0).toLocaleString("en-US");
+      if (!s || typeof s.total_decisions !== "number") return;
 
+      const fmt = (n) => (n || 0).toLocaleString(document.documentElement.lang === "de" ? "de-AT" : "en-US");
       document.getElementById("stats-decisions").textContent = fmt(s.total_decisions);
       document.getElementById("stats-laws").textContent = fmt(s.total_laws);
-      const refreshed = s.generated_at
+      document.getElementById("stats-refreshed").textContent = s.generated_at
         ? s.generated_at.slice(0, 19).replace("T", " ") + " UTC"
         : "—";
-      document.getElementById("stats-refreshed").textContent = refreshed;
 
       const byCourt = s.decisions_by_court || {};
       const entries = Object.entries(byCourt).sort((a, b) => b[1] - a[1]);
-      if (entries.length === 0) {
-        courtsEl.appendChild(makeEmpty("No decisions yet — backfill in progress."));
-      } else {
-        for (const [court, count] of entries) {
-          courtsEl.appendChild(makeRow(court, count, fmt));
-        }
+      for (const [court, count] of entries) {
+        courtsEl.appendChild(makeRow(court, count, fmt));
       }
 
-      loading.classList.add("hidden");
       body.classList.remove("hidden");
     } catch (e) {
-      loading.textContent = "Stats not available yet.";
+      // Silent: if stats fail to load, the section just stays hidden.
     }
   })();
 </script>
