@@ -71,6 +71,28 @@ def coverage_cmd(out: str) -> None:
     )
 
 
+@ingest_main.command("import-from-hf")
+@click.option("--repo", default="voilaj/austrian-caselaw",
+              help="HuggingFace dataset repo")
+@click.option("--revision", default="main", help="HF revision/branch/tag")
+@click.option("--force", is_flag=True, help="Overwrite existing local DB")
+def import_from_hf_cmd(repo: str, revision: str, force: bool) -> None:
+    """Download the pre-built SQLite corpus from HuggingFace instead of ingesting locally."""
+    from .hf_import import DatasetNotPublishedError, import_from_hf
+
+    try:
+        info = import_from_hf(repo=repo, revision=revision, force=force)
+    except DatasetNotPublishedError as e:
+        click.echo(f"error: {e}", err=True)
+        raise SystemExit(2)
+    except FileExistsError as e:
+        click.echo(f"error: {e}", err=True)
+        raise SystemExit(1)
+
+    mb = info["bytes"] / (1024 * 1024)
+    click.echo(f"downloaded {info['path']} ({mb:.1f} MB, sha256 verified)")
+
+
 @click.command("ris-mcp")
 @click.argument("subcommand", type=click.Choice(["serve"]), default="serve")
 def mcp_main(subcommand: str) -> None:
