@@ -175,10 +175,10 @@
         <li>Kostenlos, lokal, ohne Registrierung</li>
       </ul>
       <div class="mt-4 text-xs text-slate-500" data-lang="en">
-        Best fit: developers, law students comfortable with a terminal, anyone willing to run a backfill themselves.
+        Works if you can copy-paste a few commands &mdash; no programming background needed. Each step below takes under a minute.
       </div>
       <div class="mt-4 text-xs text-slate-500" data-lang="de">
-        Geeignet für: Entwickler:innen, Jus-Studierende mit Terminal-Erfahrung, alle, die die Erstbefüllung selbst anstoßen wollen.
+        Funktioniert, wenn Sie ein paar Befehle kopieren und einfügen können &mdash; Programmierkenntnisse sind nicht nötig. Jeder Schritt unten dauert unter einer Minute.
       </div>
     </div>
 
@@ -272,21 +272,34 @@
   </h2>
 
   <!-- HF-DATASET-PENDING -->
-  <div class="mt-6 bg-amber-50 border border-amber-200 rounded-lg p-4 text-sm">
-    <span data-lang="en">
+  <div class="mt-6 bg-amber-50 border border-amber-200 rounded-lg p-4 text-sm space-y-3">
+    <p data-lang="en">
       <strong>Heads-up:</strong> the pre-built database is still being prepared (the full backfill
-      takes 2&ndash;3 days on a single laptop). Until it is ready, the final install step below
-      will show a friendly error telling you to either wait or build the database yourself. Check
-      back in a few days or watch
-      <a href="https://github.com/jonashertner/ris-mcp/releases" class="underline">releases on GitHub</a>.
-    </span>
-    <span data-lang="de">
+      takes 2&ndash;3 days on a single laptop). Until it is ready, step 3 below will show a
+      friendly error telling you to either wait or build the database yourself.
+    </p>
+    <p data-lang="de">
       <strong>Hinweis:</strong> Die fertige Datenbank wird gerade erstellt (die Erstbefüllung
-      dauert auf einem einzelnen Laptop 2&ndash;3 Tage). Bis dahin zeigt der letzte
-      Installationsschritt eine freundliche Fehlermeldung an, die Sie bittet zu warten oder die
-      Datenbank selbst aufzubauen. Schauen Sie in ein paar Tagen wieder vorbei oder beobachten Sie
-      die <a href="https://github.com/jonashertner/ris-mcp/releases" class="underline">Releases auf GitHub</a>.
-    </span>
+      dauert auf einem einzelnen Laptop 2&ndash;3 Tage). Bis dahin zeigt Schritt 3 unten eine
+      freundliche Fehlermeldung an, die Sie bittet zu warten oder die Datenbank selbst aufzubauen.
+    </p>
+    <p class="flex flex-wrap gap-3">
+      <a href="mailto:jonashertner@protonmail.ch?subject=ris-mcp%20notify%20me&amp;body=Please%20email%20me%20when%20the%20pre-built%20database%20is%20ready."
+         class="inline-block bg-amber-600 text-white px-3 py-1.5 rounded-md font-medium hover:bg-amber-700">
+        <span data-lang="en">Notify me when it's ready</span>
+        <span data-lang="de">Benachrichtigen, wenn fertig</span>
+      </a>
+      <a href="https://github.com/jonashertner/ris-mcp/releases.atom"
+         class="inline-block border border-amber-300 text-amber-800 px-3 py-1.5 rounded-md font-medium hover:bg-amber-100">
+        <span data-lang="en">RSS/Atom feed</span>
+        <span data-lang="de">RSS/Atom-Feed</span>
+      </a>
+      <a href="https://github.com/jonashertner/ris-mcp/releases"
+         class="inline-block border border-amber-300 text-amber-800 px-3 py-1.5 rounded-md font-medium hover:bg-amber-100">
+        <span data-lang="en">GitHub releases</span>
+        <span data-lang="de">GitHub-Releases</span>
+      </a>
+    </p>
   </div>
   <!-- /HF-DATASET-PENDING -->
 
@@ -297,11 +310,11 @@
     </h3>
     <p class="mt-2 text-slate-600" data-lang="en">
       This is the path if you use the <a href="https://claude.ai/download" class="underline">Claude Desktop app</a>
-      on Mac or Windows and don't write code day to day. Three small steps.
+      on Mac or Windows and don't write code day to day. Four short steps (each under a minute).
     </p>
     <p class="mt-2 text-slate-600" data-lang="de">
       Diese Anleitung ist für Sie, wenn Sie die <a href="https://claude.ai/download" class="underline">Claude-Desktop-App</a>
-      auf Mac oder Windows verwenden und im Alltag nicht programmieren. Drei kleine Schritte.
+      auf Mac oder Windows verwenden und im Alltag nicht programmieren. Vier kurze Schritte (je unter einer Minute).
     </p>
 
     <ol class="mt-6 space-y-8">
@@ -329,15 +342,21 @@
           <span data-lang="de">2. Claude Desktop das Plug-in bekanntmachen.</span>
         </div>
         <p class="text-sm text-slate-500 mt-1" data-lang="en">
-          Open Claude Desktop &rarr; Settings &rarr; Developer &rarr; Edit Config. A JSON file opens.
-          Paste the block below inside the <code>mcpServers</code> object (create it if missing):
+          In Claude Desktop click <strong>Settings</strong> &rarr; <strong>Developer</strong> &rarr;
+          <strong>Edit Config</strong>. A JSON file opens in your text editor.
+          <span class="text-slate-400">(Claude Desktop's menu is English-only, even on a German system.)</span>
         </p>
         <p class="text-sm text-slate-500 mt-1" data-lang="de">
-          Öffnen Sie Claude Desktop &rarr; Einstellungen &rarr; Entwickler &rarr; Config bearbeiten.
-          Eine JSON-Datei öffnet sich. Fügen Sie den Block unten im Objekt <code>mcpServers</code> ein
-          (legen Sie dieses an, falls es fehlt):
+          Klicken Sie in Claude Desktop auf <strong>Settings</strong> &rarr; <strong>Developer</strong> &rarr;
+          <strong>Edit Config</strong>. Eine JSON-Datei öffnet sich im Texteditor.
+          <span class="text-slate-400">(Die Claude-Desktop-Menüs sind englisch, auch auf deutschsprachigen Systemen.)</span>
         </p>
-        <pre class="mt-3 bg-slate-900 text-slate-100 rounded-lg p-4 text-sm overflow-x-auto"><code>{
+
+        <div class="mt-4 text-xs text-slate-500 font-medium">
+          <span data-lang="en">If the file is empty (or just shows <code>{}</code>), replace its contents with:</span>
+          <span data-lang="de">Ist die Datei leer (oder zeigt nur <code>{}</code>), ersetzen Sie den Inhalt durch:</span>
+        </div>
+        <pre class="mt-1 bg-slate-900 text-slate-100 rounded-lg p-4 text-sm overflow-x-auto"><code>{
   "mcpServers": {
     "ris": {
       "command": "uvx",
@@ -345,10 +364,46 @@
     }
   }
 }</code></pre>
-        <p class="text-sm text-slate-500 mt-2" data-lang="en">
+
+        <div class="mt-4 text-xs text-slate-500 font-medium">
+          <span data-lang="en">If the file already has other plug-ins, add the <code>"ris"</code> entry inside <code>mcpServers</code> (mind the comma):</span>
+          <span data-lang="de">Gibt es bereits andere Plug-ins, ergänzen Sie den Eintrag <code>"ris"</code> innerhalb von <code>mcpServers</code> (Komma beachten):</span>
+        </div>
+        <pre class="mt-1 bg-slate-900 text-slate-100 rounded-lg p-4 text-sm overflow-x-auto"><code>{
+  "mcpServers": {
+    "some-other-plugin": { "command": "...", "args": [...] },
+    "ris": {
+      "command": "uvx",
+      "args": ["ris-mcp", "serve"]
+    }
+  }
+}</code></pre>
+
+        <div class="mt-4 p-3 bg-sky-50 border border-sky-200 rounded-md text-xs text-slate-700">
+          <strong class="block mb-1">
+            <span data-lang="en">macOS gotcha</span><span data-lang="de">macOS-Besonderheit</span>
+          </strong>
+          <span data-lang="en">
+            Claude Desktop on macOS does <em>not</em> inherit your shell's <code>PATH</code>, so
+            <code>"command": "uvx"</code> can fail to resolve even when <code>uvx</code> works
+            perfectly in Terminal. Replace <code>"uvx"</code> with the absolute path. To find it,
+            run <code>uvx ris-mcp doctor</code> in Terminal &mdash; it prints the exact path on the
+            &ldquo;uvx on PATH&rdquo; line. Your config will look like:
+          </span>
+          <span data-lang="de">
+            Claude Desktop auf macOS übernimmt den <code>PATH</code> Ihrer Shell <em>nicht</em>, daher
+            kann <code>"command": "uvx"</code> fehlschlagen, obwohl <code>uvx</code> im Terminal einwandfrei
+            funktioniert. Ersetzen Sie <code>"uvx"</code> durch den absoluten Pfad. Um ihn zu finden,
+            führen Sie im Terminal <code>uvx ris-mcp doctor</code> aus &mdash; der Pfad erscheint in der
+            Zeile &bdquo;uvx on PATH&ldquo;. Ihre Config sieht dann etwa so aus:
+          </span>
+          <pre class="mt-2 bg-slate-900 text-slate-100 rounded-md p-3 text-xs overflow-x-auto"><code>"command": "/Users/YOUR-USERNAME/.local/bin/uvx"</code></pre>
+        </div>
+
+        <p class="text-sm text-slate-500 mt-3" data-lang="en">
           Save the file. Quit and re-open Claude Desktop. A 🔌 plug icon should show <code>ris-mcp</code> as connected.
         </p>
-        <p class="text-sm text-slate-500 mt-2" data-lang="de">
+        <p class="text-sm text-slate-500 mt-3" data-lang="de">
           Speichern Sie die Datei. Beenden Sie Claude Desktop und öffnen Sie es erneut. Ein 🔌-Symbol zeigt, dass <code>ris-mcp</code> verbunden ist.
         </p>
       </li>
@@ -360,12 +415,36 @@
         </div>
         <p class="text-sm text-slate-500 mt-1" data-lang="en">Back in the terminal:</p>
         <p class="text-sm text-slate-500 mt-1" data-lang="de">Wieder im Terminal:</p>
-        <pre class="mt-2 bg-slate-900 text-slate-100 rounded-lg p-4 text-sm overflow-x-auto"><code>uvx ris-mcp ingest import-from-hf</code></pre>
+        <pre class="mt-2 bg-slate-900 text-slate-100 rounded-lg p-4 text-sm overflow-x-auto"><code>uvx --from ris-mcp ris-ingest import-from-hf</code></pre>
         <p class="text-sm text-slate-500 mt-2" data-lang="en">
           This downloads everything in one go so Claude can answer instantly afterwards. You only do this once.
         </p>
         <p class="text-sm text-slate-500 mt-2" data-lang="de">
           Damit liegt alles lokal vor und Claude antwortet danach sofort. Der Schritt ist nur einmal nötig.
+        </p>
+      </li>
+
+      <li>
+        <div class="font-medium">
+          <span data-lang="en">4. Verify the install.</span>
+          <span data-lang="de">4. Installation überprüfen.</span>
+        </div>
+        <p class="text-sm text-slate-500 mt-1" data-lang="en">
+          Run this in the terminal to confirm each piece is in place:
+        </p>
+        <p class="text-sm text-slate-500 mt-1" data-lang="de">
+          Prüfen Sie im Terminal, dass alle Teile an Ort und Stelle sind:
+        </p>
+        <pre class="mt-2 bg-slate-900 text-slate-100 rounded-lg p-4 text-sm overflow-x-auto"><code>uvx ris-mcp doctor</code></pre>
+        <p class="text-sm text-slate-500 mt-2" data-lang="en">
+          You should see a short report with green ✅ lines for Python, uvx, the database file, and
+          the number of indexed decisions. Any ❌ or ⚠️ line tells you exactly what to fix. Then
+          open Claude Desktop and try one of the example questions above.
+        </p>
+        <p class="text-sm text-slate-500 mt-2" data-lang="de">
+          Sie erhalten einen kurzen Bericht mit grünen ✅-Zeilen für Python, uvx, die Datenbankdatei und
+          die Anzahl indexierter Entscheidungen. Jede ❌- oder ⚠️-Zeile sagt Ihnen genau, was zu tun ist.
+          Anschließend öffnen Sie Claude Desktop und probieren eine der Beispielfragen oben.
         </p>
       </li>
 
