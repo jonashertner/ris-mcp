@@ -1,6 +1,6 @@
 [project]
 name = "ris-mcp"
-version = "0.2.1"
+version = "0.2.2"
 description = "MCP server for Austrian RIS (court decisions + federal law) backed by a local FTS5-indexed SQLite mirror"
 readme = "README.md"
 requires-python = ">=3.11"
