@@ -5,12 +5,14 @@ upsert into SQLite. Crash-safe (commit per page). Delta-aware via Aenderungsdatu
 """
 from __future__ import annotations
 
+import asyncio
 import datetime as dt
 import json
 import logging
 import sqlite3
 from typing import Any
 
+import httpx
 from bs4 import BeautifulSoup
 
 from .applikation import get_applikation
@@ -65,14 +67,29 @@ async def ingest_applikation(
         state = get_sync_state(conn, applikation)
         watermark = state.get("watermark_aenderungsdatum") if state else None
 
+    max_network_retries = 20
+    network_backoff = 30
+
     page = 1
     total = 0
     max_aenderung: str | None = watermark
     while True:
-        resp = await client.search(
-            applikation=applikation, page=page, page_size=page_size,
-            aenderungsdatum_from=watermark,
-        )
+        for network_attempt in range(1, max_network_retries + 1):
+            try:
+                resp = await client.search(
+                    applikation=applikation, page=page, page_size=page_size,
+                    aenderungsdatum_from=watermark,
+                )
+                break
+            except (httpx.ConnectError, httpx.TimeoutException, OSError) as exc:
+                wait = network_backoff * network_attempt
+                log.warning(
+                    "ingest %s page %d: network error (%s), retry %d/%d in %ds",
+                    applikation, page, exc, network_attempt, max_network_retries, wait,
+                )
+                if network_attempt == max_network_retries:
+                    raise
+                await asyncio.sleep(wait)
         if not resp.hits:
             break
         for hit in resp.hits:
