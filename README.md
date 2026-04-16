@@ -8,7 +8,7 @@ Local MCP server for the Austrian Rechtsinformationssystem (RIS) — court decis
 
 ## What
 
-`ris-mcp` maintains a locally-mirrored, FTS5-indexed SQLite copy of the full Austrian RIS corpus and exposes it to Claude via MCP. Compare to [`philrox/ris-mcp-ts`](https://github.com/philrox/ris-mcp-ts), which is a thin live-API proxy: local mirror wins on search quality, latency, offline capability, and future citation-graph/reranking work.
+`ris-mcp` maintains a locally-mirrored, FTS5-indexed SQLite copy of the full Austrian RIS corpus and exposes it to Claude via MCP. Unlike a live-API proxy, the local mirror delivers better search quality (BM25 over full text), sub-millisecond latency, offline capability, and a foundation for citation-graph and semantic-search features.
 
 ## Install (users)
 
@@ -48,7 +48,5 @@ Emit coverage stats:
 
 ## Credits
 
-- [ximex/ris-bka](https://github.com/ximex/ris-bka) — RIS OGD documentation
-- [philrox/ris-mcp-ts](https://github.com/philrox/ris-mcp-ts) — different design, same goal
-- [PhilippTh/ris-API-wrapper](https://github.com/PhilippTh/ris-API-wrapper) — Python wrapper precedent
-- [opencaselaw.ch](https://opencaselaw.ch) — architectural inspiration
+- [ximex/ris-bka](https://github.com/ximex/ris-bka) — early (2013) RIS OGD documentation
+- [opencaselaw.ch](https://opencaselaw.ch) — architectural inspiration (Swiss case law)
