@@ -34,7 +34,7 @@ def _row_from_hit(
     return {
         "id": f"{applikation}:{hit.dokument_id}",
         "applikation": applikation,
-        "court": court,
+        "court": hit.organ or court,
         "geschaeftszahl": hit.geschaeftszahl,
         "entscheidungsdatum": hit.entscheidungsdatum,
         "rechtssatznummer": None,

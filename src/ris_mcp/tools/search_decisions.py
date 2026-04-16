@@ -65,7 +65,17 @@ TOOL = Tool(
         "type": "object",
         "properties": {
             "query": {"type": "string", "description": "FTS5 MATCH expression or keywords"},
-            "court": {"type": "string", "description": "e.g. OGH, VfGH, VwGH, BVwG"},
+            "court": {
+                "type": "string",
+                "description": (
+                    "Court name. Common values: OGH, OLG Wien, OLG Graz, OLG Linz, "
+                    "OLG Innsbruck, LG (various), BG (various), VfGH, VwGH, BVwG, "
+                    "LVwG-Bgld, LVwG-Ktn, LVwG-NÖ, LVwG-OÖ, LVwG-Sbg, LVwG-Stmk, "
+                    "LVwG-Tir, LVwG-Vbg, LVwG-Wien, DSK, DSB, GBK, PVAK. "
+                    "For ordinary courts (Justiz), use the specific court name "
+                    "(e.g. 'OGH'), not 'Justiz'."
+                ),
+            },
             "applikation": {"type": "string"},
             "date_from": {"type": "string", "description": "ISO date inclusive"},
             "date_to": {"type": "string", "description": "ISO date inclusive"},

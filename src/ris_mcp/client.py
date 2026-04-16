@@ -34,6 +34,7 @@ class SearchHit(BaseModel):
     rechtssatz: str | None = None
     document_url: str | None = None
     aenderungsdatum: str | None = None
+    organ: str | None = None
     raw: dict[str, Any] = Field(default_factory=dict)
 
 
@@ -338,6 +339,7 @@ class RisClient:
             rechtssatz = _item_to_str(judikatur.get("Rechtssatz"))
 
             dokument_id = technisch.get("ID") or ""
+            organ = (technisch.get("Organ") or "").strip() or None
 
             # DokumentUrl is the human HTML landing page; prefer the XML/HTML
             # content URL from Dokumentliste when present.
@@ -354,6 +356,7 @@ class RisClient:
                     rechtssatz=rechtssatz,
                     document_url=document_url,
                     aenderungsdatum=allgemein.get("Geaendert"),
+                    organ=organ,
                     raw=r,
                 )
             )

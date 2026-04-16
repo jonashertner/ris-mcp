@@ -50,6 +50,13 @@ def test_search_respects_date_range(tmp_db):
     assert {r["geschaeftszahl"] for r in out} == {"G1/24"}
 
 
+def test_search_filters_by_organ_court(tmp_db):
+    _seed(tmp_db)
+    out = search_decisions(tmp_db, query="Beschwerde OR Vertrag", court="VfGH")
+    assert all(r["court"] == "VfGH" for r in out)
+    assert len(out) >= 1
+
+
 def test_search_returns_snippet(tmp_db):
     _seed(tmp_db)
     out = search_decisions(tmp_db, query="Gleichheit")

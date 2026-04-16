@@ -107,6 +107,23 @@ def serve_cmd() -> None:
     mcp_server.main()
 
 
+@mcp_main.command("migrate")
+def migrate_cmd() -> None:
+    """Run pending database migrations."""
+    import importlib.resources
+
+    conn = open_db()
+    sql = (
+        importlib.resources.files("ris_mcp.migrations")
+        .joinpath("001_backfill_organ_court.sql")
+        .read_text()
+    )
+    conn.executescript(sql)
+    conn.commit()
+    affected = conn.execute("SELECT COUNT(DISTINCT court) FROM decisions").fetchone()[0]
+    click.echo(f"Migration complete. {affected} distinct court values now in DB.")
+
+
 @mcp_main.command("doctor")
 def doctor_cmd() -> None:
     """Check your ris-mcp installation for common problems."""

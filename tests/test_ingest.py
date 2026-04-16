@@ -55,6 +55,52 @@ async def test_ingest_delta_passes_watermark(tmp_db):
     assert call.kwargs["aenderungsdatum_from"] == "2024-06-01T00:00:00"
 
 
+async def test_ingest_uses_organ_as_court(tmp_db):
+    """When hit.organ is set, it should be used as the court value instead of cfg.court."""
+    client = AsyncMock()
+    hit = SearchHit(
+        dokument_id="d1",
+        geschaeftszahl="1Ob1/24",
+        entscheidungsdatum="2024-01-01",
+        organ="OGH",
+        aenderungsdatum="2024-01-02T10:00:00",
+        raw={},
+    )
+    client.search.side_effect = [
+        SearchResponse(applikation="Justiz", page=1, total=1, hits=[hit]),
+        SearchResponse(applikation="Justiz", page=2, hits=[]),
+    ]
+    client.fetch_document.return_value = "<p>text</p>"
+
+    n = await ingest_applikation(client, tmp_db, applikation="Justiz")
+    assert n == 1
+
+    row = tmp_db.execute("SELECT court FROM decisions WHERE id='Justiz:d1'").fetchone()
+    assert row["court"] == "OGH"  # NOT "Justiz"
+
+
+async def test_ingest_falls_back_to_cfg_court_without_organ(tmp_db):
+    """When hit.organ is None, fall back to the ApplikationConfig court label."""
+    client = AsyncMock()
+    hit = SearchHit(
+        dokument_id="d1",
+        geschaeftszahl="G1/24",
+        entscheidungsdatum="2024-01-01",
+        aenderungsdatum="2024-01-02T10:00:00",
+        raw={},
+    )
+    client.search.side_effect = [
+        SearchResponse(applikation="Vfgh", page=1, total=1, hits=[hit]),
+        SearchResponse(applikation="Vfgh", page=2, hits=[]),
+    ]
+    client.fetch_document.return_value = "<p>text</p>"
+
+    await ingest_applikation(client, tmp_db, applikation="Vfgh")
+
+    row = tmp_db.execute("SELECT court FROM decisions WHERE id='Vfgh:d1'").fetchone()
+    assert row["court"] == "VfGH"
+
+
 async def test_ingest_warns_on_empty_geschaeftszahl(tmp_db, caplog):
     client = AsyncMock()
     client.search.side_effect = [

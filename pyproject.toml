@@ -32,6 +32,7 @@ packages = ["src/ris_mcp"]
 
 [tool.hatch.build.targets.wheel.force-include]
 "src/ris_mcp/schema.sql" = "ris_mcp/schema.sql"
+"src/ris_mcp/migrations" = "ris_mcp/migrations"
 
 [tool.ruff]
 line-length = 100
