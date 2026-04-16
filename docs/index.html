@@ -19,29 +19,41 @@
 </head>
 <body class="bg-slate-50 text-slate-900 font-sans antialiased">
 
-<header class="border-b border-slate-200 bg-white">
-  <div class="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
-    <div class="flex items-center gap-3">
-      <span class="text-2xl">⚖️</span>
-      <span class="font-semibold">ris-mcp</span>
+<header class="border-b border-slate-200 bg-white sticky top-0 z-50">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between">
+    <div class="flex items-center gap-2 sm:gap-3">
+      <span class="text-xl sm:text-2xl">⚖️</span>
+      <span class="font-semibold text-sm sm:text-base">ris-mcp</span>
     </div>
-    <nav class="flex gap-6 text-sm items-center">
+    <div class="flex items-center gap-2">
+      <span class="flex items-center gap-1 border border-slate-200 rounded-md">
+        <button id="lang-de" class="lang-btn" aria-pressed="false" type="button">DE</button>
+        <button id="lang-en" class="lang-btn" aria-pressed="false" type="button">EN</button>
+      </span>
+      <button id="menu-toggle" type="button" class="md:hidden p-2 text-slate-600 hover:text-slate-900" aria-label="Menu">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+    </div>
+    <nav id="nav-links" class="hidden md:flex gap-6 text-sm items-center">
       <a href="#examples" class="hover:text-slate-600"><span data-lang="en">Examples</span><span data-lang="de">Beispiele</span></a>
       <a href="#install" class="hover:text-slate-600"><span data-lang="en">Install</span><span data-lang="de">Installation</span></a>
       <a href="#status" class="hover:text-slate-600"><span data-lang="en">Status</span><span data-lang="de">Status</span></a>
       <a href="#roadmap" class="hover:text-slate-600"><span data-lang="en">Roadmap</span><span data-lang="de">Fahrplan</span></a>
       <a href="https://github.com/jonashertner/ris-mcp" class="hover:text-slate-600">GitHub</a>
-      <span class="ml-2 flex items-center gap-1 border border-slate-200 rounded-md">
-        <button id="lang-de" class="lang-btn" aria-pressed="false" type="button">DE</button>
-        <button id="lang-en" class="lang-btn" aria-pressed="false" type="button">EN</button>
-      </span>
     </nav>
   </div>
+  <nav id="mobile-nav" class="hidden md:hidden border-t border-slate-100 bg-white px-4 pb-3 pt-2 text-sm space-y-2">
+    <a href="#examples" class="block py-1 text-slate-700 hover:text-slate-900"><span data-lang="en">Examples</span><span data-lang="de">Beispiele</span></a>
+    <a href="#install" class="block py-1 text-slate-700 hover:text-slate-900"><span data-lang="en">Install</span><span data-lang="de">Installation</span></a>
+    <a href="#status" class="block py-1 text-slate-700 hover:text-slate-900"><span data-lang="en">Status</span><span data-lang="de">Status</span></a>
+    <a href="#roadmap" class="block py-1 text-slate-700 hover:text-slate-900"><span data-lang="en">Roadmap</span><span data-lang="de">Fahrplan</span></a>
+    <a href="https://github.com/jonashertner/ris-mcp" class="block py-1 text-slate-700 hover:text-slate-900">GitHub</a>
+  </nav>
 </header>
 
 <!-- HERO -->
-<section class="max-w-5xl mx-auto px-6 py-20">
-  <h1 class="text-4xl md:text-5xl font-bold tracking-tight">
+<section class="max-w-5xl mx-auto px-4 sm:px-6 py-12 sm:py-20">
+  <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight">
     <span data-lang="en">Ask Claude about Austrian law.</span>
     <span data-lang="de">Claude nach österreichischem Recht fragen.</span>
   </h1>
@@ -67,7 +79,7 @@
 </section>
 
 <!-- EXAMPLES -->
-<section id="examples" class="max-w-5xl mx-auto px-6 py-12 border-t border-slate-200">
+<section id="examples" class="max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-12 border-t border-slate-200">
   <h2 class="text-3xl font-bold">
     <span data-lang="en">What you can ask Claude</span>
     <span data-lang="de">Beispielfragen an Claude</span>
@@ -146,7 +158,7 @@
 </section>
 
 <!-- STATUS -->
-<section id="status" class="max-w-5xl mx-auto px-6 py-16 border-t border-slate-200">
+<section id="status" class="max-w-5xl mx-auto px-4 sm:px-6 py-10 sm:py-16 border-t border-slate-200">
   <h2 class="text-3xl font-bold">
     <span data-lang="en">What works today, what's coming soon</span>
     <span data-lang="de">Was heute funktioniert, was bald kommt</span>
@@ -269,7 +281,7 @@
 </section>
 
 <!-- INSTALL -->
-<section id="install" class="max-w-5xl mx-auto px-6 py-16 border-t border-slate-200">
+<section id="install" class="max-w-5xl mx-auto px-4 sm:px-6 py-10 sm:py-16 border-t border-slate-200">
   <h2 class="text-3xl font-bold">
     <span data-lang="en">Install</span><span data-lang="de">Installation</span>
   </h2>
@@ -331,11 +343,11 @@
         <p class="text-sm text-slate-500 mt-1" data-lang="de">Öffnen Sie die Terminal-App (Mac) oder PowerShell (Windows) und fügen Sie ein:</p>
         <div class="mt-2">
           <div class="text-xs text-slate-500">macOS / Linux:</div>
-          <pre class="mt-1 bg-slate-900 text-slate-100 rounded-lg p-4 text-sm overflow-x-auto"><code>curl -LsSf https://astral.sh/uv/install.sh | sh</code></pre>
+          <pre class="mt-1 bg-slate-900 text-slate-100 rounded-lg p-3 sm:p-4 text-xs sm:text-sm overflow-x-auto"><code>curl -LsSf https://astral.sh/uv/install.sh | sh</code></pre>
         </div>
         <div class="mt-2">
           <div class="text-xs text-slate-500">Windows (PowerShell):</div>
-          <pre class="mt-1 bg-slate-900 text-slate-100 rounded-lg p-4 text-sm overflow-x-auto"><code>powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"</code></pre>
+          <pre class="mt-1 bg-slate-900 text-slate-100 rounded-lg p-3 sm:p-4 text-xs sm:text-sm overflow-x-auto"><code>powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"</code></pre>
         </div>
       </li>
 
@@ -359,7 +371,7 @@
           <span data-lang="en">If the file is empty (or just shows <code>{}</code>), replace its contents with:</span>
           <span data-lang="de">Ist die Datei leer (oder zeigt nur <code>{}</code>), ersetzen Sie den Inhalt durch:</span>
         </div>
-        <pre class="mt-1 bg-slate-900 text-slate-100 rounded-lg p-4 text-sm overflow-x-auto"><code>{
+        <pre class="mt-1 bg-slate-900 text-slate-100 rounded-lg p-3 sm:p-4 text-xs sm:text-sm overflow-x-auto"><code>{
   "mcpServers": {
     "ris": {
       "command": "uvx",
@@ -372,7 +384,7 @@
           <span data-lang="en">If the file already has other plug-ins, add the <code>"ris"</code> entry inside <code>mcpServers</code> (mind the comma):</span>
           <span data-lang="de">Gibt es bereits andere Plug-ins, ergänzen Sie den Eintrag <code>"ris"</code> innerhalb von <code>mcpServers</code> (Komma beachten):</span>
         </div>
-        <pre class="mt-1 bg-slate-900 text-slate-100 rounded-lg p-4 text-sm overflow-x-auto"><code>{
+        <pre class="mt-1 bg-slate-900 text-slate-100 rounded-lg p-3 sm:p-4 text-xs sm:text-sm overflow-x-auto"><code>{
   "mcpServers": {
     "some-other-plugin": { "command": "...", "args": [...] },
     "ris": {
@@ -418,7 +430,7 @@
         </div>
         <p class="text-sm text-slate-500 mt-1" data-lang="en">Back in the terminal:</p>
         <p class="text-sm text-slate-500 mt-1" data-lang="de">Wieder im Terminal:</p>
-        <pre class="mt-2 bg-slate-900 text-slate-100 rounded-lg p-4 text-sm overflow-x-auto"><code>uvx --from ris-mcp ris-ingest import-from-hf</code></pre>
+        <pre class="mt-2 bg-slate-900 text-slate-100 rounded-lg p-3 sm:p-4 text-xs sm:text-sm overflow-x-auto"><code>uvx --from ris-mcp ris-ingest import-from-hf</code></pre>
         <p class="text-sm text-slate-500 mt-2" data-lang="en">
           This downloads everything in one go so Claude can answer instantly afterwards. You only do this once.
         </p>
@@ -438,7 +450,7 @@
         <p class="text-sm text-slate-500 mt-1" data-lang="de">
           Prüfen Sie im Terminal, dass alle Teile an Ort und Stelle sind:
         </p>
-        <pre class="mt-2 bg-slate-900 text-slate-100 rounded-lg p-4 text-sm overflow-x-auto"><code>uvx ris-mcp doctor</code></pre>
+        <pre class="mt-2 bg-slate-900 text-slate-100 rounded-lg p-3 sm:p-4 text-xs sm:text-sm overflow-x-auto"><code>uvx ris-mcp doctor</code></pre>
         <p class="text-sm text-slate-500 mt-2" data-lang="en">
           You should see a short report with green ✅ lines for Python, uvx, the database file, and
           the number of indexed decisions. Any ❌ or ⚠️ line tells you exactly what to fix. Then
@@ -492,7 +504,7 @@ ris-ingest --full</code></pre>
 </section>
 
 <!-- TRUST -->
-<section class="max-w-5xl mx-auto px-6 py-16 border-t border-slate-200">
+<section class="max-w-5xl mx-auto px-4 sm:px-6 py-10 sm:py-16 border-t border-slate-200">
   <h2 class="text-3xl font-bold">
     <span data-lang="en">Where the data comes from</span>
     <span data-lang="de">Woher die Daten stammen</span>
@@ -556,7 +568,7 @@ ris-ingest --full</code></pre>
 </section>
 
 <!-- ROADMAP -->
-<section id="roadmap" class="max-w-5xl mx-auto px-6 py-16 border-t border-slate-200">
+<section id="roadmap" class="max-w-5xl mx-auto px-4 sm:px-6 py-10 sm:py-16 border-t border-slate-200">
   <h2 class="text-3xl font-bold">
     <span data-lang="en">Roadmap</span><span data-lang="de">Fahrplan</span>
   </h2>
@@ -640,7 +652,7 @@ ris-ingest --full</code></pre>
 </section>
 
 <footer class="border-t border-slate-200 mt-8">
-  <div class="max-w-5xl mx-auto px-6 py-10 text-sm text-slate-600 space-y-3">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-10 text-sm text-slate-600 space-y-3">
     <p data-lang="en">
       Code: MIT. Data: CC0-1.0 &mdash; Austrian RIS content is amtliches Werk per § 7 öUrhG.
     </p>
@@ -705,10 +717,24 @@ ris-ingest --full</code></pre>
       if (deBtn) deBtn.addEventListener("click", () => apply("de"));
     };
 
+    const initNav = () => {
+      const toggle = document.getElementById("menu-toggle");
+      const mobileNav = document.getElementById("mobile-nav");
+      if (toggle && mobileNav) {
+        toggle.addEventListener("click", () => {
+          mobileNav.classList.toggle("hidden");
+        });
+        mobileNav.querySelectorAll("a").forEach((a) => {
+          a.addEventListener("click", () => mobileNav.classList.add("hidden"));
+        });
+      }
+    };
+
     if (document.readyState === "loading") {
-      document.addEventListener("DOMContentLoaded", init);
+      document.addEventListener("DOMContentLoaded", () => { init(); initNav(); });
     } else {
       init();
+      initNav();
     }
   })();
 </script>
