@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>ris-mcp — ask Claude about Austrian law · Claude nach österreichischem Recht fragen</title>
-<meta name="description" data-lang="en" content="A free local plug-in that lets Claude answer questions about Austrian court decisions and federal statutes, grounded in the real text." />
-<meta name="description" data-lang="de" content="Ein kostenloses lokales Plug-in, mit dem Claude Fragen zur österreichischen Judikatur und Bundesgesetzgebung direkt aus dem amtlichen Text beantwortet." />
+<title>ris-mcp — proof of concept for Austrian legal research over MCP</title>
+<meta name="description" data-lang="en" content="A proof-of-concept local MCP server for Austrian court decisions and federal statutes." />
+<meta name="description" data-lang="de" content="Ein lokaler MCP-Server als Proof of Concept für österreichische Judikatur und Bundesgesetzgebung." />
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
   html[lang="en"] [data-lang="de"] { display: none !important; }
@@ -38,7 +38,7 @@
       <a href="#examples" class="hover:text-slate-600"><span data-lang="en">Examples</span><span data-lang="de">Beispiele</span></a>
       <a href="#install" class="hover:text-slate-600"><span data-lang="en">Install</span><span data-lang="de">Installation</span></a>
       <a href="#status" class="hover:text-slate-600"><span data-lang="en">Status</span><span data-lang="de">Status</span></a>
-      <a href="#roadmap" class="hover:text-slate-600"><span data-lang="en">Roadmap</span><span data-lang="de">Fahrplan</span></a>
+      <a href="#handoff" class="hover:text-slate-600"><span data-lang="en">Take it further</span><span data-lang="de">Weiterentwickeln</span></a>
       <a href="https://github.com/jonashertner/ris-mcp" class="hover:text-slate-600">GitHub</a>
     </nav>
   </div>
@@ -46,7 +46,7 @@
     <a href="#examples" class="block py-1 text-slate-700 hover:text-slate-900"><span data-lang="en">Examples</span><span data-lang="de">Beispiele</span></a>
     <a href="#install" class="block py-1 text-slate-700 hover:text-slate-900"><span data-lang="en">Install</span><span data-lang="de">Installation</span></a>
     <a href="#status" class="block py-1 text-slate-700 hover:text-slate-900"><span data-lang="en">Status</span><span data-lang="de">Status</span></a>
-    <a href="#roadmap" class="block py-1 text-slate-700 hover:text-slate-900"><span data-lang="en">Roadmap</span><span data-lang="de">Fahrplan</span></a>
+    <a href="#handoff" class="block py-1 text-slate-700 hover:text-slate-900"><span data-lang="en">Take it further</span><span data-lang="de">Weiterentwickeln</span></a>
     <a href="https://github.com/jonashertner/ris-mcp" class="block py-1 text-slate-700 hover:text-slate-900">GitHub</a>
   </nav>
 </header>
@@ -54,19 +54,18 @@
 <!-- HERO -->
 <section class="max-w-5xl mx-auto px-4 sm:px-6 py-12 sm:py-20">
   <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight">
-    <span data-lang="en">Ask Claude about Austrian law.</span>
-    <span data-lang="de">Claude nach österreichischem Recht fragen.</span>
+    <span data-lang="en">A proof of concept for Austrian legal research.</span>
+    <span data-lang="de">Ein Proof of Concept für österreichische Rechtsrecherche.</span>
   </h1>
   <p class="mt-6 text-lg text-slate-600 max-w-3xl" data-lang="en">
-    <code>ris-mcp</code> is a free plug-in for Claude that answers questions about published
-    Austrian court decisions and federal statutes &mdash; grounded in the real text, not made-up
-    citations. It runs on your computer, for free, using the Austrian government's open data.
+    <code>ris-mcp</code> is a proof of concept showing how an MCP client can search published
+    Austrian court decisions and federal statutes from a local database grounded in official
+    open data. It is published for others to study, fork, and develop further.
   </p>
   <p class="mt-6 text-lg text-slate-600 max-w-3xl" data-lang="de">
-    <code>ris-mcp</code> ist ein kostenloses Plug-in für Claude, das Fragen zur veröffentlichten
-    österreichischen Judikatur und zur konsolidierten Bundesgesetzgebung beantwortet &mdash;
-    direkt aus dem amtlichen Text, ohne erfundene Zitate. Es läuft lokal auf Ihrem Rechner,
-    kostenlos, mit den offenen Daten des Bundes.
+    <code>ris-mcp</code> ist ein Proof of Concept: Er zeigt, wie ein MCP-Client veröffentlichte
+    österreichische Judikatur und Bundesgesetze in einer lokalen Datenbank aus amtlichen offenen
+    Daten durchsuchen kann. Das Projekt ist zur Prüfung, Weiterverwendung und Fortentwicklung veröffentlicht.
   </p>
   <div class="mt-10 flex flex-wrap gap-3">
     <a href="#install" class="bg-slate-900 text-white px-5 py-3 rounded-lg font-medium hover:bg-slate-800">
@@ -164,16 +163,16 @@
     <span data-lang="de">Projektstatus</span>
   </h2>
   <p class="mt-3 text-slate-600 max-w-3xl" data-lang="en">
-    The server and live importer work, but there is no public pre-built corpus download yet.
-    To use the project today, you must build a local database from the official RIS API.
+    The server and live importer work as a technical demonstration. This repository does not
+    provide a public pre-built corpus, hosted endpoint, support commitment, or product roadmap.
   </p>
   <p class="mt-3 text-slate-600 max-w-3xl" data-lang="de">
-    Server und Live-Import funktionieren, aber es gibt noch keinen öffentlichen Download des
-    fertigen Datenbestands. Wer das Projekt heute nutzen will, muss die lokale Datenbank selbst
-    aus der offiziellen RIS-API aufbauen.
+    Server und Live-Import funktionieren als technische Demonstration. Dieses Repository bietet
+    keinen öffentlichen fertigen Datenbestand, keinen gehosteten Endpunkt, keine Supportzusage
+    und keinen Produktfahrplan.
   </p>
 
-  <div class="mt-8 grid md:grid-cols-3 gap-4">
+  <div class="mt-8 grid md:grid-cols-2 gap-4">
 
     <div class="bg-emerald-50 border border-emerald-200 rounded-lg p-5">
       <div class="text-emerald-700 font-semibold" data-lang="en">✅ Works now (self-build)</div>
@@ -199,8 +198,8 @@
     </div>
 
     <div class="bg-amber-50 border border-amber-200 rounded-lg p-5">
-      <div class="text-amber-700 font-semibold" data-lang="en">⏳ Not available yet</div>
-      <div class="text-amber-700 font-semibold" data-lang="de">⏳ Noch nicht verfügbar</div>
+      <div class="text-amber-700 font-semibold" data-lang="en">Not included</div>
+      <div class="text-amber-700 font-semibold" data-lang="de">Nicht enthalten</div>
       <ul class="mt-3 text-sm text-slate-700 space-y-2 list-disc list-inside" data-lang="en">
         <li>A maintained snapshot of the complete supported corpus</li>
         <li>A public, checksum-verified pre-built database download</li>
@@ -212,50 +211,23 @@
         <li>Eine schnelle Installation ohne mehrtägigen Import</li>
       </ul>
       <div class="mt-4 text-xs text-slate-500" data-lang="en">
-        No availability date is promised. This page will be updated when a verified snapshot is actually public.
+        These are outside the scope of this proof of concept, not announced deliverables.
       </div>
       <div class="mt-4 text-xs text-slate-500" data-lang="de">
-        Es gibt keinen zugesagten Termin. Diese Seite wird aktualisiert, sobald ein verifizierter Snapshot wirklich öffentlich ist.
-      </div>
-    </div>
-
-    <div class="bg-slate-100 border border-slate-200 rounded-lg p-5">
-      <div class="text-slate-700 font-semibold" data-lang="en">🔮 Coming later</div>
-      <div class="text-slate-700 font-semibold" data-lang="de">🔮 Später</div>
-      <ul class="mt-3 text-sm text-slate-700 space-y-2 list-disc list-inside" data-lang="en">
-        <li><strong>Citation chains</strong> &mdash; &ldquo;which OGH decisions cite this VfGH ruling?&rdquo;</li>
-        <li><strong>Leading-case ranking</strong> &mdash; authoritative decisions on a given statute, weighted by citation count</li>
-        <li><strong>Semantic search</strong> &mdash; find cases by what they are <em>about</em>, not just by keyword</li>
-        <li><strong>Materialien</strong> &mdash; RV-Erläuterungen and Nationalratsdebatten for teleological interpretation</li>
-        <li><strong>Landesrecht</strong> &mdash; state-level legislation</li>
-        <li><strong>Hosted version</strong> &mdash; no local install, just a URL Claude connects to</li>
-      </ul>
-      <ul class="mt-3 text-sm text-slate-700 space-y-2 list-disc list-inside" data-lang="de">
-        <li><strong>Zitationsketten</strong> &mdash; „Welche OGH-Entscheidungen zitieren diesen VfGH-Spruch?"</li>
-        <li><strong>Leitentscheidungen</strong> &mdash; maßgebliche Entscheidungen zu einer Norm, gewichtet nach Zitaten</li>
-        <li><strong>Semantische Suche</strong> &mdash; Entscheidungen nach Thema finden, nicht nur nach Stichwort</li>
-        <li><strong>Materialien</strong> &mdash; RV-Erläuterungen und Nationalratsdebatten für die teleologische Auslegung</li>
-        <li><strong>Landesrecht</strong> &mdash; Landesgesetzgebung</li>
-        <li><strong>Gehostete Version</strong> &mdash; ohne lokale Installation, einfach eine URL für Claude</li>
-      </ul>
-      <div class="mt-4 text-xs text-slate-500" data-lang="en">
-        No dates promised. Sequencing will follow what users actually ask for.
-      </div>
-      <div class="mt-4 text-xs text-slate-500" data-lang="de">
-        Ohne feste Termine. Die Reihenfolge richtet sich nach Nutzerwünschen.
+        Dies liegt außerhalb dieses Proof of Concept und ist nicht als künftige Leistung angekündigt.
       </div>
     </div>
 
   </div>
 
-  <!-- live corpus counter -->
+  <!-- recorded corpus counter -->
   <div id="stats-body" class="mt-12 hidden">
     <h3 class="text-xl font-semibold">
-      <span data-lang="en">Live database status</span><span data-lang="de">Aktueller Datenbankstand</span>
+      <span data-lang="en">Recorded corpus snapshot</span><span data-lang="de">Dokumentierter Datenbestand</span>
     </h3>
     <p class="text-sm text-slate-500 mt-1">
-      <span data-lang="en">Refreshed whenever the maintainer re-runs the backfill.</span>
-      <span data-lang="de">Aktualisiert, sobald der Maintainer die Erstbefüllung neu anstößt.</span>
+      <span data-lang="en">Historical snapshot generated by the last recorded demonstration backfill.</span>
+      <span data-lang="de">Historischer Stand aus dem letzten dokumentierten Demonstrationsimport.</span>
     </p>
     <div class="mt-4 grid md:grid-cols-3 gap-4">
       <div class="bg-white border border-slate-200 rounded-lg p-5">
@@ -287,37 +259,20 @@
     <span data-lang="en">Install</span><span data-lang="de">Installation</span>
   </h2>
 
-  <!-- HF-DATASET-PENDING -->
+  <!-- DATASET-STATUS -->
   <div class="mt-6 bg-amber-50 border border-amber-200 rounded-lg p-4 text-sm space-y-3">
     <p data-lang="en">
-      <strong>Current limitation:</strong> there is no public pre-built database. Step 3 below
+      <strong>Proof-of-concept limitation:</strong> no public pre-built database is provided. Step 3 below
       builds one directly from the official RIS API; it currently takes about 3&ndash;4 days and
       roughly 40 GB of disk space.
     </p>
     <p data-lang="de">
-      <strong>Derzeitige Einschränkung:</strong> Es gibt keine öffentliche fertige Datenbank.
+      <strong>Einschränkung des Proof of Concept:</strong> Eine öffentliche fertige Datenbank wird nicht bereitgestellt.
       Schritt 3 baut sie direkt aus der offiziellen RIS-API auf; das dauert derzeit etwa
       3&ndash;4 Tage und benötigt ungefähr 40 GB Speicherplatz.
     </p>
-    <p class="flex flex-wrap gap-3">
-      <a href="mailto:jonashertner@protonmail.ch?subject=ris-mcp%20notify%20me&amp;body=Please%20email%20me%20when%20the%20pre-built%20database%20is%20ready."
-         class="inline-block bg-amber-600 text-white px-3 py-1.5 rounded-md font-medium hover:bg-amber-700">
-        <span data-lang="en">Notify me when it's ready</span>
-        <span data-lang="de">Benachrichtigen, wenn fertig</span>
-      </a>
-      <a href="https://github.com/jonashertner/ris-mcp/releases.atom"
-         class="inline-block border border-amber-300 text-amber-800 px-3 py-1.5 rounded-md font-medium hover:bg-amber-100">
-        <span data-lang="en">RSS/Atom feed</span>
-        <span data-lang="de">RSS/Atom-Feed</span>
-      </a>
-      <a href="https://github.com/jonashertner/ris-mcp/releases"
-         class="inline-block border border-amber-300 text-amber-800 px-3 py-1.5 rounded-md font-medium hover:bg-amber-100">
-        <span data-lang="en">GitHub releases</span>
-        <span data-lang="de">GitHub-Releases</span>
-      </a>
-    </p>
   </div>
-  <!-- /HF-DATASET-PENDING -->
+  <!-- /DATASET-STATUS -->
 
   <div class="mt-10">
     <h3 class="text-xl font-semibold">
@@ -569,85 +524,52 @@
   </div>
 </section>
 
-<!-- ROADMAP -->
-<section id="roadmap" class="max-w-5xl mx-auto px-4 sm:px-6 py-10 sm:py-16 border-t border-slate-200">
+<!-- HANDOFF -->
+<section id="handoff" class="max-w-5xl mx-auto px-4 sm:px-6 py-10 sm:py-16 border-t border-slate-200">
   <h2 class="text-3xl font-bold">
-    <span data-lang="en">Roadmap</span><span data-lang="de">Fahrplan</span>
+    <span data-lang="en">Take it further</span><span data-lang="de">Weiterentwickeln</span>
   </h2>
-  <ol class="mt-6 relative border-l border-slate-300 ml-2">
-    <li class="ml-6 mb-8">
-      <span class="absolute -left-2.5 mt-1.5 w-5 h-5 bg-emerald-500 rounded-full border-2 border-white"></span>
-      <div class="font-semibold">
-        <span data-lang="en">Available today</span><span data-lang="de">Heute verfügbar</span>
-      </div>
-      <p class="text-sm text-slate-600 mt-1" data-lang="en">
-        Build a local corpus from the official RIS API, then ask Claude to find and summarise the
-        indexed decisions and statutes. Search works offline after the import.
-      </p>
-      <p class="text-sm text-slate-600 mt-1" data-lang="de">
-        Bauen Sie einen lokalen Datenbestand aus der offiziellen RIS-API auf und fragen Sie Claude
-        danach zu den indexierten Entscheidungen und Gesetzen. Die Suche funktioniert nach dem Import offline.
-      </p>
-    </li>
-    <li class="ml-6 mb-8">
-      <span class="absolute -left-2.5 mt-1.5 w-5 h-5 bg-amber-500 rounded-full border-2 border-white"></span>
-      <div class="font-semibold">
-        <span data-lang="en">Not available yet</span><span data-lang="de">Noch nicht verfügbar</span>
-      </div>
-      <p class="text-sm text-slate-600 mt-1" data-lang="en">
-        A maintained, checksum-verified snapshot of the complete supported corpus that can be
-        downloaded instead of built locally. No availability date is promised.
-      </p>
-      <p class="text-sm text-slate-600 mt-1" data-lang="de">
-        Ein gepflegter, per Prüfsumme verifizierter Snapshot des vollständigen unterstützten
-        Datenbestands zum Download statt zum lokalen Aufbau. Es gibt keinen zugesagten Termin.
-      </p>
-    </li>
-    <li class="ml-6 mb-8">
-      <span class="absolute -left-2.5 mt-1.5 w-5 h-5 bg-slate-400 rounded-full border-2 border-white"></span>
-      <div class="font-semibold">
-        <span data-lang="en">After that: smarter research tools</span>
-        <span data-lang="de">Danach: klügere Recherchewerkzeuge</span>
-      </div>
-      <p class="text-sm text-slate-600 mt-1" data-lang="en">
-        Citation chains (&ldquo;which cases cite this one?&rdquo;), leading-case ranking by citation
-        weight and AI-assisted semantic search that finds cases by topic rather than literal keyword.
-      </p>
-      <p class="text-sm text-slate-600 mt-1" data-lang="de">
-        Zitationsketten („Welche Entscheidungen zitieren diese hier?"), Leitentscheidungen nach
-        Zitationsgewicht und KI-gestützte semantische Suche, die Fälle nach Thema findet statt nur
-        nach Stichwort.
-      </p>
-    </li>
-    <li class="ml-6 mb-8">
-      <span class="absolute -left-2.5 mt-1.5 w-5 h-5 bg-slate-400 rounded-full border-2 border-white"></span>
-      <div class="font-semibold">
-        <span data-lang="en">Later: legislative history &amp; state law</span>
-        <span data-lang="de">Später: Materialien &amp; Landesrecht</span>
-      </div>
-      <p class="text-sm text-slate-600 mt-1" data-lang="en">
-        Erläuternde Bemerkungen der Regierungsvorlage and Nationalratsstenographische Protokolle for
-        teleological interpretation. Landesrecht (the nine provinces' own laws).
-      </p>
-      <p class="text-sm text-slate-600 mt-1" data-lang="de">
-        Erläuternde Bemerkungen der Regierungsvorlage sowie Stenographische Protokolle des
-        Nationalrats für die teleologische Auslegung. Landesrecht aller neun Bundesländer.
-      </p>
-    </li>
-    <li class="ml-6">
-      <span class="absolute -left-2.5 mt-1.5 w-5 h-5 bg-slate-400 rounded-full border-2 border-white"></span>
-      <div class="font-semibold">
-        <span data-lang="en">Someday: zero-install hosted version</span>
-        <span data-lang="de">Irgendwann: gehostete Version ohne Installation</span>
-      </div>
-      <p class="text-sm text-slate-600 mt-1" data-lang="en">
-        A URL Claude can connect to directly, so non-technical users do not need to install anything.
-      </p>
-      <p class="text-sm text-slate-600 mt-1" data-lang="de">
-        Eine URL, mit der sich Claude direkt verbindet, sodass auch Nicht-Techniker:innen nichts installieren müssen.
-      </p>
-    </li>
-  </ol>
+  <p class="mt-3 text-slate-600 max-w-3xl" data-lang="en">
+    This repository is a working proof of concept and a starting point for others. It has no
+    announced roadmap or ongoing support commitment. Fork it, adapt it, or use its ingestion,
+    SQLite, and MCP patterns in another Austrian legal-information project.
+  </p>
+  <p class="mt-3 text-slate-600 max-w-3xl" data-lang="de">
+    Dieses Repository ist ein funktionsfähiger Proof of Concept und Ausgangspunkt für andere.
+    Es gibt keinen angekündigten Fahrplan und keine laufende Supportzusage. Sie können es forken,
+    anpassen oder seine Import-, SQLite- und MCP-Muster in einem anderen österreichischen
+    Rechtsinformationsprojekt verwenden.
+  </p>
+  <div class="mt-6 grid md:grid-cols-2 gap-4 text-sm">
+    <div class="bg-white border border-slate-200 rounded-lg p-5">
+      <div class="font-semibold" data-lang="en">What the proof of concept demonstrates</div>
+      <div class="font-semibold" data-lang="de">Was der Proof of Concept demonstriert</div>
+      <ul class="mt-3 text-slate-700 space-y-2 list-disc list-inside" data-lang="en">
+        <li>Resilient ingestion from the official RIS API</li>
+        <li>Local FTS5/BM25 search over SQLite</li>
+        <li>Stdio MCP tools for search and exact retrieval</li>
+      </ul>
+      <ul class="mt-3 text-slate-700 space-y-2 list-disc list-inside" data-lang="de">
+        <li>Robuster Import aus der offiziellen RIS-API</li>
+        <li>Lokale FTS5/BM25-Suche in SQLite</li>
+        <li>Stdio-MCP-Werkzeuge für Suche und gezielten Abruf</li>
+      </ul>
+    </div>
+    <div class="bg-slate-100 border border-slate-200 rounded-lg p-5">
+      <div class="font-semibold" data-lang="en">Ideas a downstream project could explore</div>
+      <div class="font-semibold" data-lang="de">Mögliche Ansätze für ein Folgeprojekt</div>
+      <ul class="mt-3 text-slate-700 space-y-2 list-disc list-inside" data-lang="en">
+        <li>Maintained corpus snapshots and automated updates</li>
+        <li>Citation graphs, leading-case ranking, and semantic search</li>
+        <li>Legislative history, state law, or a hosted endpoint</li>
+      </ul>
+      <ul class="mt-3 text-slate-700 space-y-2 list-disc list-inside" data-lang="de">
+        <li>Gepflegte Daten-Snapshots und automatisierte Aktualisierung</li>
+        <li>Zitationsgraphen, Leitentscheidungsranking und semantische Suche</li>
+        <li>Materialien, Landesrecht oder ein gehosteter Endpunkt</li>
+      </ul>
+    </div>
+  </div>
 </section>
 
 <footer class="border-t border-slate-200 mt-8">

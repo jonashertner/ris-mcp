@@ -1,21 +1,26 @@
 # ris-mcp
 
-> **👉 For end users: see [jonashertner.github.io/ris-mcp](https://jonashertner.github.io/ris-mcp/) for the three-command install.**
+> **👉 See [jonashertner.github.io/ris-mcp](https://jonashertner.github.io/ris-mcp/) for the project page and self-build instructions.**
 
-Local MCP server for the Austrian Rechtsinformationssystem (RIS) — court decisions and consolidated federal law, queryable from Claude (Code, Desktop, claude.ai).
+Proof-of-concept local MCP server for the Austrian Rechtsinformationssystem
+(RIS) — court decisions and consolidated federal law, queryable from MCP clients.
 
 [![CI](https://github.com/jonashertner/ris-mcp/actions/workflows/ci.yml/badge.svg)](https://github.com/jonashertner/ris-mcp/actions/workflows/ci.yml)
 
 ## What
 
-`ris-mcp` maintains a locally-mirrored, FTS5-indexed SQLite copy of the full Austrian RIS corpus and exposes it to Claude via MCP. Unlike a live-API proxy, the local mirror delivers better search quality (BM25 over full text), sub-millisecond latency, offline capability, and a foundation for citation-graph and semantic-search features.
+`ris-mcp` demonstrates how to ingest Austrian RIS data into a local,
+FTS5-indexed SQLite database and expose it through MCP. The repository is
+published for others to study, fork, and take forward. It is not a supported
+service or product, and it has no delivery roadmap.
 
 ## Install (users)
 
 See the [landing page](https://jonashertner.github.io/ris-mcp/).
 
-There is currently no public pre-built corpus download. To use the server now,
-build a local database from the official RIS API with `ris-ingest --full`.
+No public pre-built corpus or hosted endpoint is provided. To exercise the
+proof of concept, build a local database from the official RIS API with
+`ris-ingest --full`.
 
 ## Develop (contributors)
 

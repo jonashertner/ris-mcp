@@ -1,6 +1,7 @@
-# Publishing the pre-built ris-mcp dataset to HuggingFace
+# Handoff: publishing a pre-built ris-mcp dataset to HuggingFace
 
-Run after the full backfill (`ris-ingest --full`) completes on any one machine.
+These are reference instructions for a downstream maintainer who chooses to
+publish a corpus snapshot. They are not a project roadmap or delivery commitment.
 
 ## 1. Generate a fresh stats report
 
@@ -37,9 +38,10 @@ Manually edit `README.md` on the HF repo (web UI). Include:
 - Schema reference: this repo's `src/ris_mcp/schema.sql`
 - How to use: `pip install ris-mcp && ris-ingest import-from-hf`
 
-## 5. Remove "coming soon" banners from the landing page
+## 5. Update the dataset-status block on the landing page
 
-In `docs/index.html`, search for `<!-- HF-DATASET-PENDING -->` and remove the marked block. Commit:
+In `docs/index.html`, search for `<!-- DATASET-STATUS -->` and update the marked
+block to identify the publisher, snapshot date, coverage, size, and checksum. Commit:
 
 ```bash
 git commit -m "Announce HF dataset availability"
