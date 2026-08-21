@@ -35,7 +35,7 @@ def test_check_uvx_missing(monkeypatch):
 def test_check_db_file_missing(tmp_path):
     c = check_db_file(tmp_path / "nope.db")
     assert c.status == "fail"
-    assert "import-from-hf" in c.hint
+    assert "ris-ingest --full" in c.hint
 
 
 def test_check_db_file_tiny(tmp_path):
