@@ -56,8 +56,8 @@ def check_db_file(db_path: Path | None = None) -> Check:
         return Check(
             "Database file", "fail",
             f"not found at {p}",
-            hint="Run: ris-ingest import-from-hf "
-                 "(or ris-ingest --full to build from scratch, 2–3 days).",
+            hint="Run: ris-ingest --full to build it from the official RIS API "
+                 "(currently about 3–4 days).",
         )
     size = p.stat().st_size
     size_mb = size / (1024 * 1024)
@@ -65,7 +65,7 @@ def check_db_file(db_path: Path | None = None) -> Check:
         return Check(
             "Database file", "warn",
             f"{p} exists but is very small ({size_mb:.2f} MB) — probably empty",
-            hint="Run: ris-ingest import-from-hf",
+            hint="Run: ris-ingest --full to build it from the official RIS API.",
         )
     return Check("Database file", "ok", f"{p} ({size_mb:.0f} MB)")
 
@@ -83,13 +83,13 @@ def check_db_contents(db_path: Path | None = None) -> Check:
         return Check(
             "Database contents", "fail",
             f"corrupt or unreadable: {e}",
-            hint="Delete the file and re-run ris-ingest import-from-hf.",
+            hint="Move the file aside and re-run ris-ingest --full.",
         )
     if total == 0 and laws == 0:
         return Check(
             "Database contents", "warn",
             "no decisions or laws indexed yet",
-            hint="Run: ris-ingest import-from-hf (or ris-ingest --full).",
+            hint="Run: ris-ingest --full to build it from the official RIS API.",
         )
     return Check(
         "Database contents", "ok",

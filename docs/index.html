@@ -160,61 +160,62 @@
 <!-- STATUS -->
 <section id="status" class="max-w-5xl mx-auto px-4 sm:px-6 py-10 sm:py-16 border-t border-slate-200">
   <h2 class="text-3xl font-bold">
-    <span data-lang="en">What works today, what's coming soon</span>
-    <span data-lang="de">Was heute funktioniert, was bald kommt</span>
+    <span data-lang="en">Project status</span>
+    <span data-lang="de">Projektstatus</span>
   </h2>
   <p class="mt-3 text-slate-600 max-w-3xl" data-lang="en">
-    The project is new and the full corpus is still being downloaded from the government
-    database. Here is an honest read of what is usable right now and what is in flight.
+    The server and live importer work, but there is no public pre-built corpus download yet.
+    To use the project today, you must build a local database from the official RIS API.
   </p>
   <p class="mt-3 text-slate-600 max-w-3xl" data-lang="de">
-    Das Projekt ist neu und der vollständige Datenbestand wird gerade aus der Regierungsdatenbank
-    heruntergeladen. Eine ehrliche Einschätzung, was schon funktioniert und was noch läuft:
+    Server und Live-Import funktionieren, aber es gibt noch keinen öffentlichen Download des
+    fertigen Datenbestands. Wer das Projekt heute nutzen will, muss die lokale Datenbank selbst
+    aus der offiziellen RIS-API aufbauen.
   </p>
 
   <div class="mt-8 grid md:grid-cols-3 gap-4">
 
     <div class="bg-emerald-50 border border-emerald-200 rounded-lg p-5">
-      <div class="text-emerald-700 font-semibold" data-lang="en">✅ Works now (early adopters)</div>
-      <div class="text-emerald-700 font-semibold" data-lang="de">✅ Funktioniert bereits (für Early Adopters)</div>
+      <div class="text-emerald-700 font-semibold" data-lang="en">✅ Works now (self-build)</div>
+      <div class="text-emerald-700 font-semibold" data-lang="de">✅ Funktioniert bereits (Selbstaufbau)</div>
       <ul class="mt-3 text-sm text-slate-700 space-y-2 list-disc list-inside" data-lang="en">
-        <li>Ordinary-court decisions (OGH, OLG, LG, BG) &mdash; partial, growing by the hour</li>
+        <li>Importing published decisions and federal law from the official RIS API</li>
         <li>Full-text search inside indexed decisions</li>
         <li>Retrieving any single decision by Geschäftszahl</li>
         <li>Free, local, no account needed</li>
       </ul>
       <ul class="mt-3 text-sm text-slate-700 space-y-2 list-disc list-inside" data-lang="de">
-        <li>Entscheidungen der ordentlichen Gerichtsbarkeit (OGH, OLG, LG, BG) &mdash; teilweise, stündlich wachsend</li>
+        <li>Import veröffentlichter Entscheidungen und Bundesgesetze aus der offiziellen RIS-API</li>
         <li>Volltextsuche in den bereits indexierten Entscheidungen</li>
         <li>Abruf einer einzelnen Entscheidung über die Geschäftszahl</li>
         <li>Kostenlos, lokal, ohne Registrierung</li>
       </ul>
       <div class="mt-4 text-xs text-slate-500" data-lang="en">
-        Works if you can copy-paste a few commands &mdash; no programming background needed. Each step below takes under a minute.
+        Setup takes only a few commands. Building the corpus is the slow part and currently takes about 3&ndash;4 days.
       </div>
       <div class="mt-4 text-xs text-slate-500" data-lang="de">
-        Funktioniert, wenn Sie ein paar Befehle kopieren und einfügen können &mdash; Programmierkenntnisse sind nicht nötig. Jeder Schritt unten dauert unter einer Minute.
+        Die Einrichtung braucht nur wenige Befehle. Der Aufbau des Datenbestands dauert derzeit etwa 3&ndash;4 Tage.
       </div>
     </div>
 
     <div class="bg-amber-50 border border-amber-200 rounded-lg p-5">
-      <div class="text-amber-700 font-semibold" data-lang="en">⏳ Coming in a few days</div>
-      <div class="text-amber-700 font-semibold" data-lang="de">⏳ In wenigen Tagen</div>
+      <div class="text-amber-700 font-semibold" data-lang="en">⏳ Not available yet</div>
+      <div class="text-amber-700 font-semibold" data-lang="de">⏳ Noch nicht verfügbar</div>
       <ul class="mt-3 text-sm text-slate-700 space-y-2 list-disc list-inside" data-lang="en">
-        <li>Every published Austrian court decision &mdash; roughly 700,000 in total</li>
-        <li>Every paragraph of consolidated federal law (ABGB, StGB, B-VG, all of them)</li>
-        <li>A much simpler install: <em>download</em> the ready-made database (~40 GB, one time) instead of building it yourself</li>
+        <li>A maintained snapshot of the complete supported corpus</li>
+        <li>A public, checksum-verified pre-built database download</li>
+        <li>A quick install that does not require a multi-day import</li>
       </ul>
       <ul class="mt-3 text-sm text-slate-700 space-y-2 list-disc list-inside" data-lang="de">
-        <li>Alle veröffentlichten Entscheidungen österreichischer Gerichte &mdash; rund 700.000 insgesamt</li>
-        <li>Jede Bestimmung der konsolidierten Bundesgesetze (ABGB, StGB, B-VG und alle anderen)</li>
-        <li>Deutlich einfachere Installation: Sie <em>laden</em> die fertige Datenbank (~40 GB, einmalig) statt sie selbst aufzubauen</li>
+        <li>Ein gepflegter Snapshot des vollständigen unterstützten Datenbestands</li>
+        <li>Ein öffentlicher, per Prüfsumme verifizierter Datenbank-Download</li>
+        <li>Eine schnelle Installation ohne mehrtägigen Import</li>
       </ul>
       <div class="mt-4 text-xs text-slate-500" data-lang="en">
-        The initial backfill is running on a laptop right now. When it finishes and the database is uploaded, the four-step install below just works.
+        No availability date is promised. This page will be updated when a verified snapshot is actually public.
       </div>
       <div class="mt-4 text-xs text-slate-500" data-lang="de">
-        Die Erstbefüllung läuft gerade im Hintergrund auf einem Laptop. Ist sie fertig und die Datenbank hochgeladen, funktioniert die vierstufige Installation weiter unten einfach so.
+        Es gibt keinen zugesagten Termin. Diese Seite wird aktualisiert, sobald ein verifizierter Snapshot wirklich öffentlich ist.
       </div>
     </div>
 
@@ -289,14 +290,14 @@
   <!-- HF-DATASET-PENDING -->
   <div class="mt-6 bg-amber-50 border border-amber-200 rounded-lg p-4 text-sm space-y-3">
     <p data-lang="en">
-      <strong>Heads-up:</strong> the pre-built database is still being prepared (the full backfill
-      takes 2&ndash;3 days on a single laptop). Until it is ready, step 3 below will show a
-      friendly error telling you to either wait or build the database yourself.
+      <strong>Current limitation:</strong> there is no public pre-built database. Step 3 below
+      builds one directly from the official RIS API; it currently takes about 3&ndash;4 days and
+      roughly 40 GB of disk space.
     </p>
     <p data-lang="de">
-      <strong>Hinweis:</strong> Die fertige Datenbank wird gerade erstellt (die Erstbefüllung
-      dauert auf einem einzelnen Laptop 2&ndash;3 Tage). Bis dahin zeigt Schritt 3 unten eine
-      freundliche Fehlermeldung an, die Sie bittet zu warten oder die Datenbank selbst aufzubauen.
+      <strong>Derzeitige Einschränkung:</strong> Es gibt keine öffentliche fertige Datenbank.
+      Schritt 3 baut sie direkt aus der offiziellen RIS-API auf; das dauert derzeit etwa
+      3&ndash;4 Tage und benötigt ungefähr 40 GB Speicherplatz.
     </p>
     <p class="flex flex-wrap gap-3">
       <a href="mailto:jonashertner@protonmail.ch?subject=ris-mcp%20notify%20me&amp;body=Please%20email%20me%20when%20the%20pre-built%20database%20is%20ready."
@@ -325,11 +326,12 @@
     </h3>
     <p class="mt-2 text-slate-600" data-lang="en">
       This is the path if you use the <a href="https://claude.ai/download" class="underline">Claude Desktop app</a>
-      on Mac or Windows and don't write code day to day. Four short steps (each under a minute).
+      on Mac or Windows and don't write code day to day. Setup is short, but the initial data import is not.
     </p>
     <p class="mt-2 text-slate-600" data-lang="de">
       Diese Anleitung ist für Sie, wenn Sie die <a href="https://claude.ai/download" class="underline">Claude-Desktop-App</a>
-      auf Mac oder Windows verwenden und im Alltag nicht programmieren. Vier kurze Schritte (je unter einer Minute).
+      auf Mac oder Windows verwenden und im Alltag nicht programmieren. Die Einrichtung ist kurz,
+      der erstmalige Datenimport jedoch nicht.
     </p>
 
     <ol class="mt-6 space-y-8">
@@ -425,17 +427,21 @@
 
       <li>
         <div class="font-medium">
-          <span data-lang="en">3. Download the database (one-time, ~40 GB).</span>
-          <span data-lang="de">3. Datenbank herunterladen (einmalig, ~40 GB).</span>
+          <span data-lang="en">3. Build the database (one time; about 3&ndash;4 days and ~40 GB).</span>
+          <span data-lang="de">3. Datenbank aufbauen (einmalig; etwa 3&ndash;4 Tage und ~40 GB).</span>
         </div>
         <p class="text-sm text-slate-500 mt-1" data-lang="en">Back in the terminal:</p>
         <p class="text-sm text-slate-500 mt-1" data-lang="de">Wieder im Terminal:</p>
-        <pre class="mt-2 bg-slate-900 text-slate-100 rounded-lg p-3 sm:p-4 text-xs sm:text-sm overflow-x-auto"><code>uvx --from ris-mcp ris-ingest import-from-hf</code></pre>
+        <pre class="mt-2 bg-slate-900 text-slate-100 rounded-lg p-3 sm:p-4 text-xs sm:text-sm overflow-x-auto"><code>uvx --from ris-mcp ris-ingest --full</code></pre>
         <p class="text-sm text-slate-500 mt-2" data-lang="en">
-          This downloads everything in one go so Claude can answer instantly afterwards. You only do this once.
+          Leave the terminal open while this runs. If interrupted, existing records are retained,
+          but the API scan starts again from the beginning. After a completed import, use
+          <code>ris-ingest --delta</code> to fetch only later changes.
         </p>
         <p class="text-sm text-slate-500 mt-2" data-lang="de">
-          Damit liegt alles lokal vor und Claude antwortet danach sofort. Der Schritt ist nur einmal nötig.
+          Lassen Sie das Terminal währenddessen offen. Bei einer Unterbrechung bleiben bestehende
+          Einträge erhalten, der API-Durchlauf beginnt jedoch wieder am Anfang. Nach einem vollständigen
+          Import ruft <code>ris-ingest --delta</code> nur spätere Änderungen ab.
         </p>
       </li>
 
@@ -481,24 +487,20 @@
 
   <details class="mt-10 border border-slate-200 rounded-lg">
     <summary class="cursor-pointer px-5 py-4 font-medium">
-      <span data-lang="en">Advanced: build the database yourself instead of downloading</span>
-      <span data-lang="de">Fortgeschritten: Datenbank selbst aufbauen statt herunterladen</span>
+      <span data-lang="en">Advanced: start with one court source</span>
+      <span data-lang="de">Fortgeschritten: zunächst nur eine Gerichtsquelle importieren</span>
     </summary>
     <div class="px-5 pb-5 text-sm text-slate-700 space-y-2">
       <p data-lang="en">
-        If you want a fresh copy or don't trust mystery downloads, you can build the database
-        yourself from the official Austrian government API. It takes 3&ndash;4 days and uses
-        about 40 GB of disk.
+        To try the server sooner, import one source without federal law first. For example, this
+        builds a VfGH-only database; you can run the full command from step 3 later.
       </p>
       <p data-lang="de">
-        Wenn Sie eine frische Kopie bevorzugen oder einem fremden Download nicht trauen, können Sie
-        die Datenbank selbst aus der offiziellen RIS-API aufbauen. Das dauert 3&ndash;4 Tage und
-        belegt etwa 40 GB.
+        Um den Server früher auszuprobieren, importieren Sie zunächst eine Quelle ohne Bundesrecht.
+        Dieses Beispiel baut eine reine VfGH-Datenbank auf; den vollständigen Befehl aus Schritt 3
+        können Sie später ausführen.
       </p>
-      <pre class="bg-slate-900 text-slate-100 rounded-lg p-4 overflow-x-auto"><code>pip install ris-mcp
-ris-ingest --full</code></pre>
-      <p data-lang="en">Running this on a laptop for a few nights works fine. If interrupted, re-run the same command &mdash; already-downloaded decisions are updated in place, not lost. Use <code>ris-ingest --delta</code> after the first full run to fetch only new entries.</p>
-      <p data-lang="de">Auf einem Laptop über mehrere Nächte hinweg funktioniert das problemlos. Falls unterbrochen, starten Sie den Befehl einfach neu &mdash; bereits heruntergeladene Entscheidungen werden aktualisiert, nicht gelöscht. Nach dem ersten Durchlauf verwenden Sie <code>ris-ingest --delta</code>, um nur neue Einträge abzurufen.</p>
+      <pre class="bg-slate-900 text-slate-100 rounded-lg p-4 overflow-x-auto"><code>uvx --from ris-mcp ris-ingest --full --applikation Vfgh --no-include-bundesrecht</code></pre>
     </div>
   </details>
 </section>
@@ -579,29 +581,26 @@ ris-ingest --full</code></pre>
         <span data-lang="en">Available today</span><span data-lang="de">Heute verfügbar</span>
       </div>
       <p class="text-sm text-slate-600 mt-1" data-lang="en">
-        Ask Claude to find and summarise Austrian court decisions and statutes from the data that
-        is already indexed. Runs entirely on your computer; works offline once the database is downloaded.
+        Build a local corpus from the official RIS API, then ask Claude to find and summarise the
+        indexed decisions and statutes. Search works offline after the import.
       </p>
       <p class="text-sm text-slate-600 mt-1" data-lang="de">
-        Fragen Sie Claude nach Entscheidungen und Gesetzen aus den bereits indexierten Daten, und lassen
-        Sie sich Zusammenfassungen erstellen. Läuft vollständig lokal; funktioniert offline, sobald die
-        Datenbank heruntergeladen ist.
+        Bauen Sie einen lokalen Datenbestand aus der offiziellen RIS-API auf und fragen Sie Claude
+        danach zu den indexierten Entscheidungen und Gesetzen. Die Suche funktioniert nach dem Import offline.
       </p>
     </li>
     <li class="ml-6 mb-8">
       <span class="absolute -left-2.5 mt-1.5 w-5 h-5 bg-amber-500 rounded-full border-2 border-white"></span>
       <div class="font-semibold">
-        <span data-lang="en">In the next few days</span><span data-lang="de">In den nächsten Tagen</span>
+        <span data-lang="en">Not available yet</span><span data-lang="de">Noch nicht verfügbar</span>
       </div>
       <p class="text-sm text-slate-600 mt-1" data-lang="en">
-        Full coverage of every published Austrian court (OGH, OLG, LG, BG, VfGH, VwGH, BVwG, all nine
-        Landesverwaltungsgerichte, data-protection and equal-treatment bodies) plus the complete text
-        of consolidated federal law. A ready-made database you download instead of building.
+        A maintained, checksum-verified snapshot of the complete supported corpus that can be
+        downloaded instead of built locally. No availability date is promised.
       </p>
       <p class="text-sm text-slate-600 mt-1" data-lang="de">
-        Vollständige Abdeckung jeder veröffentlichenden österreichischen Gerichtsbarkeit (OGH, OLG, LG,
-        BG, VfGH, VwGH, BVwG, alle neun Landesverwaltungsgerichte, Datenschutz- und Gleichbehandlungsorgane)
-        plus der gesamte Text der konsolidierten Bundesgesetzgebung. Als fertige Datenbank zum Download.
+        Ein gepflegter, per Prüfsumme verifizierter Snapshot des vollständigen unterstützten
+        Datenbestands zum Download statt zum lokalen Aufbau. Es gibt keinen zugesagten Termin.
       </p>
     </li>
     <li class="ml-6 mb-8">

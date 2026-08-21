@@ -1,6 +1,6 @@
 [project]
 name = "ris-mcp"
-version = "0.2.2"
+version = "0.2.3"
 description = "MCP server for Austrian RIS (court decisions + federal law) backed by a local FTS5-indexed SQLite mirror"
 readme = "README.md"
 requires-python = ">=3.11"
@@ -9,7 +9,7 @@ authors = [{ name = "Jonas Hertner", email = "jonashertner@protonmail.ch" }]
 dependencies = [
   "httpx>=0.27",
   "pydantic>=2.7",
-  "mcp>=1.2",
+  "mcp>=1.2,<2",
   "click>=8.1",
   "beautifulsoup4>=4.12",
   "lxml>=5.0",
@@ -29,10 +29,6 @@ build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/ris_mcp"]
-
-[tool.hatch.build.targets.wheel.force-include]
-"src/ris_mcp/schema.sql" = "ris_mcp/schema.sql"
-"src/ris_mcp/migrations" = "ris_mcp/migrations"
 
 [tool.ruff]
 line-length = 100

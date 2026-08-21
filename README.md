@@ -14,6 +14,9 @@ Local MCP server for the Austrian Rechtsinformationssystem (RIS) — court decis
 
 See the [landing page](https://jonashertner.github.io/ris-mcp/).
 
+There is currently no public pre-built corpus download. To use the server now,
+build a local database from the official RIS API with `ris-ingest --full`.
+
 ## Develop (contributors)
 
 ```bash
@@ -29,7 +32,7 @@ Run the MCP server locally:
 .venv/bin/ris-mcp serve
 ```
 
-Kick off a full backfill (2–3 days):
+Kick off a full backfill (currently about 3–4 days):
 
 ```bash
 .venv/bin/ris-ingest --full

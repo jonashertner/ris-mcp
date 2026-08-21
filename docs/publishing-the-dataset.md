@@ -39,7 +39,7 @@ Manually edit `README.md` on the HF repo (web UI). Include:
 
 ## 5. Remove "coming soon" banners from the landing page
 
-In `docs/index.html`, search for `<!-- HF-DATASET-PENDING -->` and remove each marked block (2 places). Commit:
+In `docs/index.html`, search for `<!-- HF-DATASET-PENDING -->` and remove the marked block. Commit:
 
 ```bash
 git commit -m "Announce HF dataset availability"
@@ -48,6 +48,6 @@ git commit -m "Announce HF dataset availability"
 ## 6. Tag a docs-only release
 
 ```bash
-git tag -a v0.2.1 -m "Pre-built dataset now available on HuggingFace"
-git push origin v0.2.1
+git tag -a vX.Y.Z -m "Pre-built dataset now available on HuggingFace"
+git push origin vX.Y.Z
 ```
